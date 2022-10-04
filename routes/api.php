@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 //Public Routes
 
-
+Route::get('/courses', function () {
+});
 
 
 //Protected Routes
