@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CoursePrerequsite extends Model
+class StudentCourse extends Model
 {
     use HasFactory;
-    protected $fillable = ['course_id', 'skill_id'];
+
+    protected $table = 'student_course';
+
+    protected $fillable = ['student_id', 'course_id', 'registered_at'];
 }
