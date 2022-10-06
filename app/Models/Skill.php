@@ -11,7 +11,7 @@ class Skill extends Model
 
     protected $fillable = ['skill'];
 
-    protected $hidden = ['pivot'];
+    protected $hidden = ['pivot', 'created_at', 'updated_at'];
 
     //////////////////// Relations /////////////////
 
@@ -19,5 +19,17 @@ class Skill extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'student_skills', 'skill_id', 'student_id');
+    }
+
+    //Skills That Required To Enroll in Course
+    public function courseReqSkills()
+    {
+        return $this->belongsToMany(Course::class, 'course_prerequitse_skills', 'skill_id', 'course_id');
+    }
+
+    //Skills That Student Will Gain After Completing The Course
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_skills', 'skill_id', 'course_id');
     }
 }

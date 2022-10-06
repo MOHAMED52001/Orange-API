@@ -23,15 +23,29 @@ class Course extends Model
     //////////////////////////////////// Relations //////////////////////////////////////////////////////////////////
 
     //Course Instructor
-    public function instructor()
-    {
-        return $this->belongsTo(Instructor::class);
-    }
 
 
     //Students In Courses
     public function students()
     {
         return $this->belongsToMany(Student::class, 'student_course', 'course_id', 'student_id');
+    }
+
+    // Skills That Student Will Gain After Completing The Course
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'course_skills', 'course_id', 'skill_id');
+    }
+
+    //Skills That Required To Enroll In Specific Course
+    public function reqSkills()
+    {
+        return $this->belongsToMany(Skill::class, 'course_prerequitse_skills', 'course_id', 'skill_id');
+    }
+
+    //Instructor Of Specific Course
+    public function instructor()
+    {
+        return $this->belongsTo(Instructor::class);
     }
 }
