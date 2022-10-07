@@ -28,7 +28,27 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Create New Student
+        $formFilds = $request->validate([
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'email' => 'required|email|unique:students,email|string',
+            'phone' => 'required|unique:students,phone|string',
+            'national_id' => 'required|unique:students,national_id|string',
+            'password' => 'required|confirmed|string',
+        ]);
+
+
+        $formFilds['password'] = bcrypt($formFilds['password']);
+
+        $student = Student::create($formFilds);
+
+
+        $response = [
+            'Student' => $student,
+        ];
+
+        return response($response, 201);
     }
 
     /**
@@ -59,20 +79,29 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+        $student = Student::find($id);
 
+        if ($student != null) {
+            $formFilds = $request->validate([
+                'fname' => 'string',
+                'lname' => 'string',
+                'email' => 'email|unique:students,email|string',
+                'phone' => 'unique:students,phone|string',
+                'national_id' => 'unique:students,national_id|string',
+            ]);
+            $student->update($formFilds);
+            $response = [
+                'Student' => $student,
+            ];
+
+            return response($response, 201);
+        } else {
+            return json_encode([
+                'message' => 'Student Not Found'
+            ]);
+        }
+    }
 
     public function getStudentSkills($id)
     {
@@ -98,7 +127,6 @@ class StudentController extends Controller
         }
     }
 
-
     //Get Student Courses 
     public function getStudentCourses($id)
     {
@@ -122,5 +150,52 @@ class StudentController extends Controller
                 'message' => 'Student Not Found'
             ]);
         }
+    }
+
+    //Add New Skills To Student
+    public function attachNewSkills(Request $request, $id)
+    {
+        $student = Student::find($id);
+
+        $student->skills()->syncWithoutDetaching($request->Skills);
+
+        return $student->skills;
+    }
+
+    //Add New Skills To Student
+    public function detachSkills(Request $request, $id)
+    {
+        $student = Student::find($id);
+
+        $student->skills()->detach($request->Skills);
+
+        return $student->skills;
+    }
+
+    //Remove Student From Talbe
+    public function removeStudent($id)
+    {
+        $student = Student::find($id);
+
+        if ($student != null) {
+            Student::destroy($id);
+            return [
+                'Student Removed' => $student
+            ];
+        } else {
+            return json_encode([
+                'message' => 'Student Not Found'
+            ]);
+        }
+    }
+
+    //Enroll Student Into Course
+    public function attachNewCourse(Request $request, $id)
+    {
+        //Check if The Student Is Not Currently In Unfinished Course
+        //if so return false
+
+        //Check if The Student Is Not Currently In Unfinished Course
+        //if not Enroll him 
     }
 }

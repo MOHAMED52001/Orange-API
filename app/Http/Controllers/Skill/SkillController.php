@@ -28,7 +28,19 @@ class SkillController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Create New Skill
+        $formFilds = $request->validate([
+            'skill' => 'required|string',
+        ]);
+
+        $skill = Skill::create($formFilds);
+
+
+        $response = [
+            'Skill' => $skill,
+        ];
+
+        return response($response, 201);
     }
 
     /**
@@ -61,7 +73,26 @@ class SkillController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $skill = Skill::find($id);
+
+        if ($skill != null) {
+            //Create New Skill
+            $formFilds = $request->validate([
+                'skill' => 'string',
+            ]);
+
+            $skill->update($formFilds);
+
+            $response = [
+                'Skill' => $skill,
+            ];
+
+            return response($response, 201);
+        } else {
+            return json_encode([
+                'message' => 'Skill Not Found'
+            ]);
+        }
     }
 
     /**
@@ -116,6 +147,23 @@ class SkillController extends Controller
                     'Students' => $students
                 ]);
             }
+        } else {
+            return json_encode([
+                'message' => 'Skill Not Found'
+            ]);
+        }
+    }
+
+    //Remove Skill From Talbe
+    public function removeSkill($id)
+    {
+        $skill = Skill::find($id);
+
+        if ($skill != null) {
+            Skill::destroy($id);
+            return [
+                'Skill Removed' => $skill
+            ];
         } else {
             return json_encode([
                 'message' => 'Skill Not Found'

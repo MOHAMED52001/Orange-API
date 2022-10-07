@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class AdminController extends Controller
 {
@@ -14,28 +16,81 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        // return all Admins 
+        return json_encode([
+            'Admins' => User::all()
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function register(Request $request)
     {
-        //
+        //Create A New Admin
+        $formFilds = $request->validate([
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'email' => 'required|email|unique:admins,email|string',
+            'phone' => 'required|unique:admins,phone|string',
+            'national_id' => 'required|unique:admins,national_id|string',
+            'password' => 'required|confirmed|string',
+        ]);
+
+
+        $formFilds['password'] = bcrypt($formFilds['password']);
+
+        $admin = User::create($formFilds);
+
+        $token = $admin->createToken('AdminToken')->plainTextToken;
+
+        $response = [
+            'Admin' => $admin,
+            'Token' => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    //Admin Login
+    public function login(Request $request)
+    {
+        $formFilds = $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+
+
+        $admin = User::where('email', $formFilds['email'])->first();
+
+        if (!$admin || password_verify($formFilds['password'], $admin->password)) {
+            return response([
+                "message" => "Invalid Credentials"
+            ], 401);
+        }
+
+
+        $token = $admin->createToken('AdminToken')->plainTextToken;
+
+        $response = [
+            'Admin' => $admin,
+            'Token' => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    //Admin Logout 
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+
+        return response([
+            'message' => 'Logged out successfully',
+
+        ], 200);
     }
 
     /**
@@ -46,18 +101,16 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        //Get Specific Admin 
+        $admin = User::find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if ($admin != null) {
+            return $admin;
+        } else {
+            return json_encode([
+                'message' => 'Admin Not Found'
+            ]);
+        }
     }
 
     /**

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Instructor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\Instructor;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 
 class InstructorController extends Controller
@@ -28,7 +30,27 @@ class InstructorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Create New Instructor
+        $formFilds = $request->validate([
+            'fname' => 'required|string',
+            'lname' => 'required|string',
+            'email' => 'required|email|unique:instructors,email|string',
+            'phone' => 'required|unique:instructors,phone|string',
+            'national_id' => 'required|unique:instructors,national_id|string',
+            'password' => 'required|confirmed|string',
+        ]);
+
+
+        $formFilds['password'] = bcrypt($formFilds['password']);
+
+        $instructor = Instructor::create($formFilds);
+
+
+        $response = [
+            'Instructor' => $instructor,
+        ];
+
+        return response($response, 201);
     }
 
     /**
@@ -39,7 +61,15 @@ class InstructorController extends Controller
      */
     public function show($id)
     {
-        //
+        $instructor = Instructor::find($id);
+
+        if ($instructor != null) {
+            return $instructor;
+        } else {
+            return json_encode([
+                'message' => 'Instructor Not Found'
+            ]);
+        }
     }
 
     /**
@@ -51,7 +81,28 @@ class InstructorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $instructor = Instructor::find($id);
+
+        if ($instructor != null) {
+            $formFilds = $request->validate([
+                'fname' => 'string',
+                'lname' => 'string',
+                'email' => 'email|unique:instructors,email|string',
+                'phone' => 'unique:instructors,phone|string',
+                'national_id' => 'unique:instructors,national_id|string',
+            ]);
+            $instructor->update($formFilds);
+            $response = [
+                'Instructor' => $instructor,
+            ];
+
+            return response($response, 201);
+        } else {
+            return json_encode([
+                'message' => 'Instructor Not Found'
+            ]);
+        }
     }
 
     /**
@@ -84,7 +135,43 @@ class InstructorController extends Controller
             }
         } else {
             return json_encode([
-                'message' => 'Skill Not Found'
+                'message' => 'Instructor Not Found'
+            ]);
+        }
+    }
+
+
+
+
+    //Adding Skills To Course
+    public function attachNewSkills(Request $request, $id)
+    {
+        $course = Course::find($id);
+        if ($course != null) {
+
+            $course->skills()->syncWithoutDetaching($request->Skills);
+
+            return $course->skills;
+        } else {
+            return json_encode([
+                'message' => 'Course Not Found'
+            ]);
+        }
+    }
+
+    //Remove Instructor From Table
+    public function removeInstructor($id)
+    {
+        $instructor = Instructor::find($id);
+
+        if ($instructor != null) {
+            Instructor::destroy($id);
+            return [
+                'Instructor Removed' => $instructor
+            ];
+        } else {
+            return json_encode([
+                'message' => 'Instructor Not Found'
             ]);
         }
     }

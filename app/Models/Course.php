@@ -15,7 +15,7 @@ class Course extends Model
         'title', 'headline', 'type', 'technologies', 'description', 'duration', 'instructor_id'
     ];
 
-    protected $hidden = ['pivot', 'created_at', 'updated_at', 'instructor_id'];
+    protected $hidden = ['pivot', 'created_at', 'updated_at'];
 
 
 

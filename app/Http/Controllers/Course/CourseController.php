@@ -26,7 +26,25 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //Create New Course
+        $formFilds = $request->validate([
+            'title' => 'required|string',
+            'headline' => 'required|string',
+            'type' => 'required|string',
+            'technologies' => 'required|string',
+            'description' => 'required|string',
+            'duration' => 'required|string',
+            'instructor_id' => 'required',
+        ]);
+
+        $course = Course::create($formFilds);
+
+
+        $response = [
+            'Course' => $course,
+        ];
+
+        return response($response, 201);
     }
 
     /**
@@ -57,7 +75,32 @@ class CourseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $course = Course::find($id);
+
+        if ($course != null) {
+            //Create New Course
+            $formFilds = $request->validate([
+                'title' => 'string',
+                'headline' => 'string',
+                'type' => 'string',
+                'technologies' => 'string',
+                'description' => 'string',
+                'duration' => 'string',
+                'instructor_id' => 'Integer',
+            ]);
+
+            $course->update($formFilds);
+
+            $response = [
+                'Course' => $course,
+            ];
+
+            return response($response, 201);
+        } else {
+            return json_encode([
+                'message' => 'Course Not Found'
+            ]);
+        }
     }
 
     /**
@@ -69,6 +112,31 @@ class CourseController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //Update Skills In Course
+    public function updateSkills($id)
+    {
+        $course = Course::find($id);
+
+        if ($course != null) {
+            $skills = Course::with(['skills' => function ($q) {
+                $q->select('skill');
+            }])->find($id)["skills"];
+            $tech = "";
+            foreach ($skills as $skill) {
+
+                $tech .= " " . $skill['skill'] . " ,";
+            }
+            $course->technologies = rtrim($tech, ',');
+            $course->save();
+
+            return $course;
+        } else {
+            return json_encode([
+                'message' => 'Course Not Found'
+            ]);
+        }
     }
 
     //Get Skills That Student Will Gain After Completing The Course
