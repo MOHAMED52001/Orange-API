@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('student_course_registration', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained()
+            $table->foreignId('student_id')->unique()->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreignId('course_id')->constrained()
+            $table->foreignId('course_id')->unique()->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->timestamp('registered_at')->useCurrent();
+            $table->timestamp('finished_at')->useCurrent();
         });
     }
 

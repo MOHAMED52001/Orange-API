@@ -140,8 +140,21 @@ class InstructorController extends Controller
         }
     }
 
+    //Adding Required Skills To Course
+    public function attachPreRequisteSkills(Request $request, $id)
+    {
+        $course = Course::find($id);
+        if ($course != null) {
 
+            $course->reqSkills()->syncWithoutDetaching($request->Skills);
 
+            return $course->reqSkills;
+        } else {
+            return json_encode([
+                'message' => 'Course Not Found'
+            ]);
+        }
+    }
 
     //Adding Skills To Course
     public function attachNewSkills(Request $request, $id)

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Student;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Course;
 use App\Models\Student;
+use Illuminate\Http\Request;
+use App\Models\StudentCourse;
+use App\Models\StudentEnrollCourse;
+use App\Http\Controllers\Controller;
 
 class StudentController extends Controller
 {
@@ -157,9 +160,16 @@ class StudentController extends Controller
     {
         $student = Student::find($id);
 
-        $student->skills()->syncWithoutDetaching($request->Skills);
+        if ($student != null) {
 
-        return $student->skills;
+            $student->skills()->syncWithoutDetaching($request->Skills);
+
+            return $student->skills;
+        } else {
+            return json_encode([
+                'message' => 'Student Not Found'
+            ]);
+        }
     }
 
     //Add New Skills To Student
@@ -190,12 +200,54 @@ class StudentController extends Controller
     }
 
     //Enroll Student Into Course
-    public function attachNewCourse(Request $request, $id)
+    public function enrollStudentInCourse(Request $request, $id)
     {
-        //Check if The Student Is Not Currently In Unfinished Course
-        //if so return false
+        //Check if the student is already in the course
+        $student_course_record = StudentEnrollCourse::where('student_id', $id)->first();
 
-        //Check if The Student Is Not Currently In Unfinished Course
-        //if not Enroll him 
+        if ($student_course_record != null) {
+
+            $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
+            if ($student_course_record->end_date <= $current_date_time) {
+
+
+                StudentEnrollCourse::destroy($student_course_record->id);
+
+                // Add The Finished Course To StudentCourse Records
+                $record_to_save_in_student_course = [
+                    'student_id' => $student_course_record->student_id,
+                    'course_id' => $student_course_record->course_id
+                ];
+                StudentCourse::create($record_to_save_in_student_course);
+
+
+
+                $Enroll_The_student_in_new_course = [
+                    'student_id' => $id,
+                    'course_id' => $request->course_id
+                ];
+
+                StudentEnrollCourse::create($Enroll_The_student_in_new_course);
+
+                return response(["Enrolled In Course" => [
+                    "StudentFinshedCourse" => $record_to_save_in_student_course,
+                    "Student Enrolled In New Course" => $Enroll_The_student_in_new_course
+                ]], 201);
+            } else {
+                return [
+                    'message' => "This Student Is Enrolled In Unfinished Course"
+                ];
+            }
+        } else {
+
+            $Enroll_The_student_in_new_course = [
+                'student_id' => $id,
+                'course_id' => $request->course_id
+            ];
+            StudentEnrollCourse::create($Enroll_The_student_in_new_course);
+            return [
+                "Student Enrolled In New Course" => $Enroll_The_student_in_new_course
+            ];
+        }
     }
 }

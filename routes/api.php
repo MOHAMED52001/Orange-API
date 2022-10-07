@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/students/{id}', [StudentController::class, 'removeStudent']); //
     Route::post('/students/{id}/addskills', [StudentController::class, 'attachNewSkills']); //
     Route::delete('/students/{id}/removeskills', [StudentController::class, 'detachSkills']); //
+    Route::post('/students/{id}/addcourse/{course_id}', [StudentController::class, 'enrollStudentInCourse']);
     Route::post('/students/{id}/addcourse', [StudentController::class, 'attachNewCourse']);
     ////////////Relations////////
     Route::get('/students/{id}/courses', [StudentController::class, 'getStudentCourses']); //
@@ -65,6 +66,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/instructors/{id}', [InstructorController::class, 'show']); //
     Route::delete('/instructors/{id}', [InstructorController::class, 'removeInstructor']); //
     Route::post('/instructors/{id}/addskills', [InstructorController::class, 'attachNewSkills']); //
+    Route::post('/instructors/{id}/addReqskills', [InstructorController::class, 'attachPreRequisteSkills']); //
 
     ////////////Relations////////
     Route::get('/instructors/{id}/courses', [InstructorController::class, 'getCoursesThatBelongToInstructor']); //
