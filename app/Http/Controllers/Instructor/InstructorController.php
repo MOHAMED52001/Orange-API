@@ -105,16 +105,7 @@ class InstructorController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 
     //Get Courses That Belongs To Instructor
     public function getCoursesThatBelongToInstructor($id)

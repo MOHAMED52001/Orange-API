@@ -210,6 +210,11 @@ class StudentController extends Controller
             $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
             if ($student_course_record->end_date <= $current_date_time) {
 
+                $student = Student::find($id);
+
+                $course = Course::find($student_course_record->course_id);
+
+                $student->skills()->syncWithoutDetaching($course->skills);
 
                 StudentEnrollCourse::destroy($student_course_record->id);
 
@@ -218,9 +223,8 @@ class StudentController extends Controller
                     'student_id' => $student_course_record->student_id,
                     'course_id' => $student_course_record->course_id
                 ];
+
                 StudentCourse::create($record_to_save_in_student_course);
-
-
 
                 $Enroll_The_student_in_new_course = [
                     'student_id' => $id,
@@ -249,5 +253,34 @@ class StudentController extends Controller
                 "Student Enrolled In New Course" => $Enroll_The_student_in_new_course
             ];
         }
+    }
+
+
+
+    public function searchByName($fname)
+    {
+        return Student::where('fname', 'like', '%' . $fname . '%')->get();
+    }
+
+    public function recommendCourses($id)
+    {
+        $student = Student::find($id);
+        $student_skills = $student->skills;
+
+        $skills = [];
+        $recommeded_courses = [];
+        foreach ($student_skills as $key => $value) {
+            $skills[] = $value['skill'];
+        }
+
+
+        $courses = Course::with('reqSkills')
+            ->whereHas('reqSkills', function ($q) use ($skills) {
+                $q->whereIn('skill', $skills);
+            })
+            ->get();
+
+        // return $skills;
+        return $courses;
     }
 }

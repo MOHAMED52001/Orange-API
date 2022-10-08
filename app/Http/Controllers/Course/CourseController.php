@@ -123,6 +123,7 @@ class CourseController extends Controller
             $skills = Course::with(['skills' => function ($q) {
                 $q->select('skill');
             }])->find($id)["skills"];
+
             $tech = "";
             foreach ($skills as $skill) {
 

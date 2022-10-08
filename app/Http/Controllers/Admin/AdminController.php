@@ -56,6 +56,8 @@ class AdminController extends Controller
     //Admin Login
     public function login(Request $request)
     {
+
+
         $formFilds = $request->validate([
             'email' => 'required|string',
             'password' => 'required|string',
@@ -65,7 +67,7 @@ class AdminController extends Controller
 
         $admin = User::where('email', $formFilds['email'])->first();
 
-        if (!$admin || password_verify($formFilds['password'], $admin->password)) {
+        if (!$admin || !password_verify($formFilds['password'], $admin->password)) {
             return response([
                 "message" => "Invalid Credentials"
             ], 401);
