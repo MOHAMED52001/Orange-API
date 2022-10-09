@@ -92,6 +92,12 @@ class TransactionController extends Controller
     {
         $ContractInfo =  SupplierContract::with('transactions')->find($id);
 
+        if ($ContractInfo == null) {
+            return [
+                "message" => "There Is No Contract Available For This Id"
+            ];
+        }
+
         if (count($ContractInfo->transactions) == 0)
             return [
                 "message" => "There Is No Contract Transactions Available For This Id"
