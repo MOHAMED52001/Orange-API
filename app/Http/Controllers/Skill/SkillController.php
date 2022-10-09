@@ -15,9 +15,7 @@ class SkillController extends Controller
      */
     public function index()
     {
-        return json_encode([
-            'Skills' =>  Skill::all()
-        ]);
+        return Skill::paginate(10);
     }
 
     /**

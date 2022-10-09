@@ -5,7 +5,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Student\StudentController;
+use App\Http\Controllers\Supplier\SupplierController;
 use App\Http\Controllers\Instructor\InstructorController;
+use App\Http\Controllers\Transaction\TransactionController;
+use App\Http\Controllers\SupplierContracts\SupplierContractsController;
 
 //Public Routes
 Route::get('/admins/login', [AdminController::class, 'login'])->name('login');
@@ -28,12 +31,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/students/{id}/removeskills', [StudentController::class, 'detachSkills']); //
     Route::post('/students/{id}/addcourse/', [StudentController::class, 'enrollStudentInCourse']); //
     Route::get('/students/search/{fname}', [StudentController::class, 'searchByName']); //
-    Route::get('/students/{id}/recommendcourses', [StudentController::class, 'recommendCourses']);
+    Route::get('/students/{id}/recommendcourses', [StudentController::class, 'recommendCourses']); //
 
     ////////////Relations////////
     Route::get('/students/{id}/courses', [StudentController::class, 'getStudentCourses']); //
     Route::get('/students/{id}/skills', [StudentController::class, 'getStudentSkills']); //
-
 
     //Course Routes
     Route::get('/courses', [CourseController::class, 'index']); //
@@ -48,7 +50,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/courses/{id}/requiredskills', [CourseController::class, 'checkCourseHasRequiredSkills']); //
     Route::get('/courses/{id}/skills', [CourseController::class, 'getSkillsAfterCompletionOfCourse']); //
 
-
     //Skill Routes
     Route::get('/skills', [SkillController::class, 'index']); //
     Route::post('/skills', [SkillController::class, 'store']); //
@@ -59,7 +60,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     ////////////Relations////////
     Route::get('/skills/{id}/courses', [SkillController::class, 'getCoursesThatHaveSkill']); //
     Route::get('/skills/{id}/students', [SkillController::class, 'getStudentsThatHaveSkill']); //
-
 
     //Instructor Routes
     Route::get('/instructors', [InstructorController::class, 'index']); //
@@ -72,4 +72,28 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     ////////////Relations////////
     Route::get('/instructors/{id}/courses', [InstructorController::class, 'getCoursesThatBelongToInstructor']); //
+
+    //Supplier Routes
+    Route::get('/suppliers', [SupplierController::class, 'index']);
+    Route::get('/suppliers/{id}', [SupplierController::class, 'show']);
+    Route::post('/suppliers', [SupplierController::class, 'store']);
+    Route::put('/suppliers/{id}', [SupplierController::class, 'update']);
+    Route::delete('/suppliers/{id}', [SupplierController::class, 'delete']);
+
+    //////////Relations//////////////////
+    Route::get('/suppliers/{id}/contracts', [SupplierController::class, 'supplierContracts']);
+    Route::get('/suppliers/{id}/suppliercontractsmoney', [SupplierController::class, 'supplierContractsMoney']);
+
+    //Supplier Contracts Routes
+    Route::get('/contracts', [SupplierContractsController::class, 'index']);
+    Route::get('/contracts/{id}', [SupplierContractsController::class, 'show']);
+    Route::post('/contracts', [SupplierContractsController::class, 'store']);
+    Route::delete('/contracts/{id}', [SupplierContractsController::class, 'delete']);
+
+    //Transactions Routes
+    Route::get('/transactions', [TransactionController::class, 'index']);
+    Route::post('/transactions', [TransactionController::class, 'store']);
+
+    /////////// Relations/////////
+    Route::get('/transactions/contract/{id}', [TransactionController::class, 'getContractTransactions']);
 });
