@@ -56,9 +56,9 @@ class SkillController extends Controller
                 'Skill' => $skill
             ]);
         } else {
-            return json_encode([
-                'message' => 'Course Not Found'
-            ]);
+            return response(json_encode([
+                'message' => 'Skill Not Found'
+            ]), 404);
         }
     }
 
@@ -87,9 +87,9 @@ class SkillController extends Controller
 
             return response($response, 201);
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Skill Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -122,9 +122,9 @@ class SkillController extends Controller
                 ]);
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Skill Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -146,9 +146,9 @@ class SkillController extends Controller
                 ]);
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Skill Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -163,9 +163,9 @@ class SkillController extends Controller
                 'Skill Removed' => $skill
             ];
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Skill Not Found'
-            ]);
+            ]), 404);
         }
     }
 }

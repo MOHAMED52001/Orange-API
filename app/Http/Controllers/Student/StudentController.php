@@ -66,9 +66,9 @@ class StudentController extends Controller
         if ($student != null) {
             return $student;
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Student Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -99,9 +99,9 @@ class StudentController extends Controller
 
             return response($response, 201);
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Student Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -123,9 +123,9 @@ class StudentController extends Controller
                 return $skills;
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Student Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -148,9 +148,9 @@ class StudentController extends Controller
                 return $courses;
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Student Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -165,9 +165,9 @@ class StudentController extends Controller
 
             return $student->skills;
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Student Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -192,9 +192,9 @@ class StudentController extends Controller
                 'Student Removed' => $student
             ];
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Student Not Found'
-            ]);
+            ]), 404);
         }
     }
 

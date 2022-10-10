@@ -60,9 +60,9 @@ class CourseController extends Controller
         if ($course != null) {
             return $course;
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -97,9 +97,9 @@ class CourseController extends Controller
 
             return response($response, 201);
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -134,9 +134,9 @@ class CourseController extends Controller
 
             return $course;
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -150,9 +150,9 @@ class CourseController extends Controller
                 'Skills' => $course->skills
             ]);
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -172,9 +172,9 @@ class CourseController extends Controller
                 ]);
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -199,9 +199,9 @@ class CourseController extends Controller
                 ]);
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -220,9 +220,9 @@ class CourseController extends Controller
                 'instructor' => $instructor
             ]);
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Course Not Found'
-            ]);
+            ]), 404);
         }
     }
 }

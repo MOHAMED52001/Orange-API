@@ -66,9 +66,9 @@ class InstructorController extends Controller
         if ($instructor != null) {
             return $instructor;
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Instructor Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -99,9 +99,9 @@ class InstructorController extends Controller
 
             return response($response, 201);
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Instructor Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -125,9 +125,9 @@ class InstructorController extends Controller
                 ]);
             }
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Instructor Not Found'
-            ]);
+            ]), 404);
         }
     }
 
@@ -157,9 +157,9 @@ class InstructorController extends Controller
 
             return $course->skills;
         } else {
-            return json_encode([
-                'message' => 'Course Not Found'
-            ]);
+            return response(json_encode([
+                'message' => 'Instructor Not Found'
+            ]), 404);
         }
     }
 
@@ -174,9 +174,9 @@ class InstructorController extends Controller
                 'Instructor Removed' => $instructor
             ];
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Instructor Not Found'
-            ]);
+            ]), 404);
         }
     }
 }

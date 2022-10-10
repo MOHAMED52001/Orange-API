@@ -81,7 +81,7 @@ class AdminController extends Controller
             'Token' => $token
         ];
 
-        return response($response, 201);
+        return response($response, 200);
     }
 
     //Admin Logout 
@@ -109,9 +109,9 @@ class AdminController extends Controller
         if ($admin != null) {
             return $admin;
         } else {
-            return json_encode([
+            return response(json_encode([
                 'message' => 'Admin Not Found'
-            ]);
+            ]), 404);
         }
     }
 
