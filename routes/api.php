@@ -11,15 +11,17 @@ use App\Http\Controllers\Transaction\TransactionController;
 use App\Http\Controllers\SupplierContracts\SupplierContractsController;
 
 //Public Routes
-Route::get('/admins/login', [AdminController::class, 'login'])->name('login');
+Route::post('/admins/login', [AdminController::class, 'login'])->name('login');
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //Admins Routes
-    Route::get('/admins/all', [AdminController::class, 'index']); //
+    Route::get('/admins', [AdminController::class, 'index']); //
     Route::get('/admins/{id}', [AdminController::class, 'show']); //
     Route::post('/admins/register', [AdminController::class, 'register']); //
     Route::post('/admins/logout', [AdminController::class, 'logout']); //
+    Route::delete('/admins/{id}', [AdminController::class, 'delete']); //
+    Route::put('/admins/{id}', [AdminController::class, 'update']); //
 
     //Student Routes
     Route::get('/students', [StudentController::class, 'index']); //
