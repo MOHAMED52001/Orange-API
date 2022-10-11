@@ -18,4 +18,5 @@ interface CourseInterface
     public function checkCourseHasRequiredSkills($id);
     public function getCourseStudents($id);
     public function getCourseInstructor($id);
+    public function attachCourseRequireSkills(Request $request, $id);
 }

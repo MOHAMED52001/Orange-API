@@ -216,4 +216,19 @@ class CourseRepository implements CourseInterface
             return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
         }
     }
+
+    //Add Required Skills To Course
+    public function attachCourseRequireSkills(Request $request, $id)
+    {
+        $course = Course::find($id);
+
+        if ($course != null) {
+
+            $course->reqSkills()->syncWithoutDetaching($request->skills);
+
+            return $this->apiResponse(200, "Skills Added Successfully", null, $course->reqSkills);
+        } else {
+            return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
+        }
+    }
 }

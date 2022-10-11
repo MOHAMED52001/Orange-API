@@ -48,6 +48,12 @@ class CourseController extends Controller
         return $this->CourseInterface->attachCourseSkills($request, $id);
     }
 
+    //Add Required Skills To Course
+    public function attachCourseRequireSkills(Request $request, $id)
+    {
+        return $this->CourseInterface->attachCourseRequireSkills($request, $id);
+    }
+
     //Update Skills In Course
     public function updateSkills($id)
     {
