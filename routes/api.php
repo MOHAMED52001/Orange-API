@@ -44,8 +44,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/courses', [CourseController::class, 'store']); //
     Route::put('/courses/{id}', [CourseController::class, 'update']); //
     Route::get('/courses/{id}', [CourseController::class, 'show']); //
+    Route::delete('/courses/{id}', [CourseController::class, 'delete']); //
+    Route::post('/courses/{id}/skills', [CourseController::class, 'attachCourseSkills']); //
     Route::put('/courses/{id}/skills', [CourseController::class, 'updateSkills']); //
-
     ////////////Relations////////
     Route::get('/courses/{id}/students', [CourseController::class, 'getCourseStudents']); //
     Route::get('/courses/{id}/instructor', [CourseController::class, 'getCourseInstructor']); //

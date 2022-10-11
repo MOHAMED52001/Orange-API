@@ -12,7 +12,7 @@ class Course extends Model
 
 
     protected $fillable = [
-        'title', 'headline', 'type', 'technologies', 'description', 'duration', 'instructor_id'
+        'title', 'headline', 'type', 'skills', 'description', 'duration', 'instructor_id'
     ];
 
     protected $hidden = ['pivot', 'created_at', 'updated_at'];
