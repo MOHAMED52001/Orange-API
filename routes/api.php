@@ -70,7 +70,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/instructors', [InstructorController::class, 'store']); //
     Route::put('/instructors/{id}', [InstructorController::class, 'update']); //
     Route::get('/instructors/{id}', [InstructorController::class, 'show']); //
-    Route::delete('/instructors/{id}', [InstructorController::class, 'removeInstructor']); //
+    Route::delete('/instructors/{id}', [InstructorController::class, 'delete']); //
     Route::post('/instructors/{id}/addskills', [InstructorController::class, 'attachNewSkills']); //
     Route::post('/instructors/{id}/addReqskills', [InstructorController::class, 'attachPreRequisteSkills']); //
 

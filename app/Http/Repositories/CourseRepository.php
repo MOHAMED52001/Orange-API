@@ -19,7 +19,7 @@ class CourseRepository implements CourseInterface
         if (!is_null($courses)) {
             return $this->apiResponse(200, "Success", null, $courses);
         }
-        return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
+        return  $this->apiResponse(200, "There Is No Records In Database");
     }
 
     public function show($id)
