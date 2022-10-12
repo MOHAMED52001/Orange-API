@@ -8,252 +8,71 @@ use Illuminate\Http\Request;
 use App\Models\StudentCourse;
 use App\Models\StudentEnrollCourse;
 use App\Http\Controllers\Controller;
+use App\Http\Interfaces\StudentInterface;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    private $StudentInterface;
+
+    public function __construct(StudentInterface $StudentInterface)
+    {
+        $this->StudentInterface = $StudentInterface;
+    }
+
     public function index()
     {
-        return Student::paginate(20);
+        return $this->StudentInterface->index();
     }
 
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //Create New Student
-        $formFilds = $request->validate([
-            'fname' => 'required|string',
-            'lname' => 'required|string',
-            'email' => 'required|email|unique:students,email|string',
-            'phone' => 'required|unique:students,phone|string',
-            'national_id' => 'required|unique:students,national_id|string',
-            'password' => 'required|confirmed|string',
-        ]);
-
-
-        $formFilds['password'] = bcrypt($formFilds['password']);
-
-        $student = Student::create($formFilds);
-
-
-        $response = [
-            'Student' => $student,
-        ];
-
-        return response($response, 201);
+        return $this->StudentInterface->store($request);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $student = Student::find($id);
-
-        if ($student != null) {
-            return $student;
-        } else {
-            return response(json_encode([
-                'message' => 'Student Not Found'
-            ]), 404);
-        }
+        return $this->StudentInterface->show($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $student = Student::find($id);
+        return $this->StudentInterface->update($request, $id);
+    }
 
-        if ($student != null) {
-            $formFilds = $request->validate([
-                'fname' => 'string',
-                'lname' => 'string',
-                'email' => 'email|unique:students,email|string',
-                'phone' => 'unique:students,phone|string',
-                'national_id' => 'unique:students,national_id|string',
-            ]);
-            $student->update($formFilds);
-            $response = [
-                'Student' => $student,
-            ];
-
-            return response($response, 201);
-        } else {
-            return response(json_encode([
-                'message' => 'Student Not Found'
-            ]), 404);
-        }
+    public function delete($id)
+    {
+        return $this->StudentInterface->delete($id);
     }
 
     public function getStudentSkills($id)
     {
-        $student = Student::with(['skills' => function ($query) {
-            $query->select('skill');
-        }])->find($id);
-
-        if ($student != null) {
-            $skills = $student->skills;
-
-            if (count($skills) == 0) {
-                return json_encode([
-                    'message' => 'Student Has No Skills'
-                ]);
-            } else {
-
-                return $skills;
-            }
-        } else {
-            return response(json_encode([
-                'message' => 'Student Not Found'
-            ]), 404);
-        }
+        return $this->StudentInterface->getStudentSkills($id);
     }
 
     //Get Student Courses 
     public function getStudentCourses($id)
     {
-        $student = Student::with(['courses' => function ($query) {
-            $query->select('title');
-        }])->find($id);
-
-        if ($student != null) {
-            $courses = $student->courses;
-
-            if (count($courses) == 0) {
-                return json_encode([
-                    'message' => 'Student Has No courses'
-                ]);
-            } else {
-
-                return $courses;
-            }
-        } else {
-            return response(json_encode([
-                'message' => 'Student Not Found'
-            ]), 404);
-        }
+        return $this->StudentInterface->getStudentCourses($id);
     }
 
     //Add New Skills To Student
     public function attachNewSkills(Request $request, $id)
     {
-        $student = Student::find($id);
-
-        if ($student != null) {
-
-            $student->skills()->syncWithoutDetaching($request->Skills);
-
-            return $student->skills;
-        } else {
-            return response(json_encode([
-                'message' => 'Student Not Found'
-            ]), 404);
-        }
+        return $this->StudentInterface->attachNewSkills($request, $id);
     }
 
     //Add New Skills To Student
     public function detachSkills(Request $request, $id)
     {
-        $student = Student::find($id);
-
-        $student->skills()->detach($request->Skills);
-
-        return $student->skills;
-    }
-
-    //Remove Student From Talbe
-    public function removeStudent($id)
-    {
-        $student = Student::find($id);
-
-        if ($student != null) {
-            Student::destroy($id);
-            return [
-                'Student Removed' => $student
-            ];
-        } else {
-            return response(json_encode([
-                'message' => 'Student Not Found'
-            ]), 404);
-        }
+        return $this->StudentInterface->detachSkills($request, $id);
     }
 
     //Enroll Student Into Course
     public function enrollStudentInCourse(Request $request, $id)
     {
-        //Check if the student is already in the course
-        $student_course_record = StudentEnrollCourse::where('student_id', $id)->first();
-
-        if ($student_course_record != null) {
-
-            $current_date_time = \Carbon\Carbon::now()->toDateTimeString();
-            if ($student_course_record->end_date <= $current_date_time) {
-
-                $student = Student::find($id);
-
-                $course = Course::find($student_course_record->course_id);
-
-                $student->skills()->syncWithoutDetaching($course->skills);
-
-                StudentEnrollCourse::destroy($student_course_record->id);
-
-                // Add The Finished Course To StudentCourse Records
-                $record_to_save_in_student_course = [
-                    'student_id' => $student_course_record->student_id,
-                    'course_id' => $student_course_record->course_id
-                ];
-
-                StudentCourse::create($record_to_save_in_student_course);
-
-                $Enroll_The_student_in_new_course = [
-                    'student_id' => $id,
-                    'course_id' => $request->course_id
-                ];
-
-                StudentEnrollCourse::create($Enroll_The_student_in_new_course);
-
-                return response(["Enrolled In Course" => [
-                    "StudentFinshedCourse" => $record_to_save_in_student_course,
-                    "Student Enrolled In New Course" => $Enroll_The_student_in_new_course
-                ]], 201);
-            } else {
-                return [
-                    'message' => "This Student Is Enrolled In Unfinished Course"
-                ];
-            }
-        } else {
-
-            $Enroll_The_student_in_new_course = [
-                'student_id' => $id,
-                'course_id' => $request->course_id
-            ];
-            StudentEnrollCourse::create($Enroll_The_student_in_new_course);
-            return [
-                "Student Enrolled In New Course" => $Enroll_The_student_in_new_course
-            ];
-        }
+        return $this->StudentInterface->enrollStudentInCourse($request, $id);
     }
-
-
 
     public function searchByName($fname)
     {
@@ -262,23 +81,6 @@ class StudentController extends Controller
 
     public function recommendCourses($id)
     {
-        $student = Student::find($id);
-        $student_skills = $student->skills;
-
-        $skills = [];
-        $recommeded_courses = [];
-        foreach ($student_skills as $key => $value) {
-            $skills[] = $value['skill'];
-        }
-
-
-        $courses = Course::with('reqSkills')
-            ->whereHas('reqSkills', function ($q) use ($skills) {
-                $q->whereIn('skill', $skills);
-            })
-            ->get();
-
-        // return $skills;
-        return $courses;
+        return $this->StudentInterface->recommendCourses($id);
     }
 }
