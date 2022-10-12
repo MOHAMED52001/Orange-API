@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/skills', [SkillController::class, 'store']); //
     Route::put('/skills/{id}', [SkillController::class, 'update']); //
     Route::get('/skills/{id}', [SkillController::class, 'show']); //
-    Route::delete('/skills/{id}', [SkillController::class, 'removeSkill']); //
+    Route::delete('/skills/{id}', [SkillController::class, 'destroy']); //
 
     ////////////Relations////////
     Route::get('/skills/{id}/courses', [SkillController::class, 'getCoursesThatHaveSkill']); //

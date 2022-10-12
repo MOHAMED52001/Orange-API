@@ -19,6 +19,12 @@ class RepositoryServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'App\Http\Interfaces\SkillInterface',
+            'App\Http\Repositories\SkillRepository'
+        );
+
+
+        $this->app->bind(
             'App\Http\Interfaces\TransactionsInterface',
             'App\Http\Repositories\TransactionsRepository'
         );

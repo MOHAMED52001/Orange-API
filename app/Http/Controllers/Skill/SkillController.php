@@ -3,169 +3,53 @@
 namespace App\Http\Controllers\Skill;
 
 use App\Http\Controllers\Controller;
+use App\Http\Interfaces\SkillInterface;
 use Illuminate\Http\Request;
 use App\Models\Skill;
 
 class SkillController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    private $SkillInterface;
+
+    public function __construct(SkillInterface $SkillInterface)
+    {
+        $this->SkillInterface = $SkillInterface;
+    }
     public function index()
     {
-        return Skill::paginate(10);
+        return $this->SkillInterface->index();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //Create New Skill
-        $formFilds = $request->validate([
-            'skill' => 'required|string',
-        ]);
-
-        $skill = Skill::create($formFilds);
-
-
-        $response = [
-            'Skill' => $skill,
-        ];
-
-        return response($response, 201);
+        return $this->SkillInterface->store($request);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $skill = Skill::find($id);
-
-        if ($skill != null) {
-            return json_encode([
-                'Skill' => $skill
-            ]);
-        } else {
-            return response(json_encode([
-                'message' => 'Skill Not Found'
-            ]), 404);
-        }
+        return $this->SkillInterface->show($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        $skill = Skill::find($id);
-
-        if ($skill != null) {
-            //Create New Skill
-            $formFilds = $request->validate([
-                'skill' => 'string',
-            ]);
-
-            $skill->update($formFilds);
-
-            $response = [
-                'Skill' => $skill,
-            ];
-
-            return response($response, 201);
-        } else {
-            return response(json_encode([
-                'message' => 'Skill Not Found'
-            ]), 404);
-        }
+        return $this->SkillInterface->update($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        return $this->SkillInterface->delete($id);
     }
 
     //get Courses That BelongsTo Skill
     public function getCoursesThatHaveSkill($id)
     {
-        $skill = Skill::find($id);
-
-        if ($skill != null) {
-            $courses = $skill->courses;
-
-            if (count($courses) == 0) {
-                return json_encode([
-                    'message' => "This Skill does not BelongsTo Any Courses"
-                ]);
-            } else {
-                return json_encode([
-                    'Courses' => $courses
-                ]);
-            }
-        } else {
-            return response(json_encode([
-                'message' => 'Skill Not Found'
-            ]), 404);
-        }
+        return $this->SkillInterface->getCoursesThatHaveSkill($id);
     }
 
     //Get Students That BelongsTo Skill
     public function getStudentsThatHaveSkill($id)
     {
-        $skill = Skill::find($id);
-
-        if ($skill != null) {
-            $students = $skill->students;
-
-            if (count($students) == 0) {
-                return json_encode([
-                    'message' => "This Skill does not BelongsTo Any Students"
-                ]);
-            } else {
-                return json_encode([
-                    'Students' => $students
-                ]);
-            }
-        } else {
-            return response(json_encode([
-                'message' => 'Skill Not Found'
-            ]), 404);
-        }
-    }
-
-    //Remove Skill From Talbe
-    public function removeSkill($id)
-    {
-        $skill = Skill::find($id);
-
-        if ($skill != null) {
-            Skill::destroy($id);
-            return [
-                'Skill Removed' => $skill
-            ];
-        } else {
-            return response(json_encode([
-                'message' => 'Skill Not Found'
-            ]), 404);
-        }
+        return $this->SkillInterface->getStudentsThatHaveSkill($id);
     }
 }
