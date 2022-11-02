@@ -27,6 +27,6 @@ trait ApiResponseTrait
             $response["errors"] = $errors;
         }
 
-        return response($response, 200);
+        return response($response, $code);
     }
 }

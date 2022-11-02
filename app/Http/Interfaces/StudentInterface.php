@@ -3,13 +3,16 @@
 namespace App\Http\Interfaces;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
+use App\Models\Student;
 
 interface StudentInterface
 {
     public function index();
-    public function store(Request $request);
-    public function show($id);
-    public function update(Request $request, $id);
+    public function store(StoreStudentRequest $request);
+    public function show(Student $student);
+    public function update(Student $student, UpdateStudentRequest $request);
     public function delete($id);
     public function getStudentSkills($id);
     public function getStudentCourses($id);

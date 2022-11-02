@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Http\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
+
+    use ApiResponseTrait;
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -45,6 +50,10 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (NotFoundHttpException $e) {
+            return  $this->apiResponse(404, "There Is No Records That Match The Given Id In Database");
         });
     }
 }

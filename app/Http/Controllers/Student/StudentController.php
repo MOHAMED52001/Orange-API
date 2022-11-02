@@ -9,11 +9,15 @@ use App\Models\StudentCourse;
 use App\Models\StudentEnrollCourse;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\StudentInterface;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 
 class StudentController extends Controller
 {
 
     private $StudentInterface;
+
+
 
     public function __construct(StudentInterface $StudentInterface)
     {
@@ -25,19 +29,19 @@ class StudentController extends Controller
         return $this->StudentInterface->index();
     }
 
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
         return $this->StudentInterface->store($request);
     }
 
-    public function show($id)
+    public function show(Student $student)
     {
-        return $this->StudentInterface->show($id);
+        return $this->StudentInterface->show($student);
     }
 
-    public function update(Request $request, $id)
+    public function update(Student $student, UpdateStudentRequest $request)
     {
-        return $this->StudentInterface->update($request, $id);
+        return $this->StudentInterface->update($student, $request);
     }
 
     public function delete($id)

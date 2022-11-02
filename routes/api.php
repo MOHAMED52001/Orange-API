@@ -15,86 +15,99 @@ Route::post('/admins/login', [AdminController::class, 'login'])->name('login');
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
+
     //Admins Routes
-    Route::get('/admins', [AdminController::class, 'index']); //
-    Route::get('/admins/{id}', [AdminController::class, 'show']); //
-    Route::post('/admins/register', [AdminController::class, 'register']); //
-    Route::post('/admins/logout', [AdminController::class, 'logout']); //
-    Route::delete('/admins/{id}', [AdminController::class, 'delete']); //
-    Route::put('/admins/{id}', [AdminController::class, 'update']); //
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/admins', 'index');
+        Route::get('/admins/{id}', 'show');
+        Route::post('/admins/register',  'register');
+        Route::post('/admins/logout', 'logout');
+        Route::delete('/admins/{id}',  'delete');
+        Route::put('/admins/{id}',  'update');
+    });
 
     //Student Routes
-    Route::get('/students', [StudentController::class, 'index']); //
-    Route::post('/students', [StudentController::class, 'store']); //
-    Route::get('/students/{id}', [StudentController::class, 'show']); //
-    Route::put('/students/{id}', [StudentController::class, 'update']); //
-    Route::delete('/students/{id}', [StudentController::class, 'delete']); //
-    Route::post('/students/{id}/addskills', [StudentController::class, 'attachNewSkills']); //
-    Route::delete('/students/{id}/removeskills', [StudentController::class, 'detachSkills']); //
-    Route::post('/students/{id}/addcourse/', [StudentController::class, 'enrollStudentInCourse']); //
-    Route::get('/students/search/{fname}', [StudentController::class, 'searchByName']); //
-    Route::get('/students/{id}/recommendcourses', [StudentController::class, 'recommendCourses']); //
-
-    ////////////Relations////////
-    Route::get('/students/{id}/courses', [StudentController::class, 'getStudentCourses']); //
-    Route::get('/students/{id}/skills', [StudentController::class, 'getStudentSkills']); //
+    Route::controller(StudentController::class)->group(function () {
+        Route::get('/students', 'index');
+        Route::post('/students', 'store');
+        Route::get('/students/{student}', 'show');
+        Route::put('/students/{student}', 'update');
+        Route::delete('/students/{id}', 'delete');
+        Route::post('/students/{id}/addskills', 'attachNewSkills');
+        Route::delete('/students/{id}/removeskills', 'detachSkills');
+        Route::post('/students/{id}/addcourse/', 'enrollStudentInCourse');
+        Route::get('/students/search/{fname}', 'searchByName');
+        Route::get('/students/{id}/recommendcourses', 'recommendCourses');
+        ////////////Relations////////
+        Route::get('/students/{id}/courses',  'getStudentCourses');
+        Route::get('/students/{id}/skills',  'getStudentSkills');
+    });
 
     //Course Routes
-    Route::get('/courses', [CourseController::class, 'index']); //
-    Route::post('/courses', [CourseController::class, 'store']); //
-    Route::put('/courses/{id}', [CourseController::class, 'update']); //
-    Route::get('/courses/{id}', [CourseController::class, 'show']); //
-    Route::delete('/courses/{id}', [CourseController::class, 'delete']); //
-    Route::post('/courses/{id}/requireskills', [CourseController::class, 'attachCourseRequireSkills']); //
-    Route::post('/courses/{id}/skills', [CourseController::class, 'attachCourseSkills']); //
-    Route::put('/courses/{id}/skills', [CourseController::class, 'updateSkills']); //
-    ////////////Relations////////
-    Route::get('/courses/{id}/students', [CourseController::class, 'getCourseStudents']); //
-    Route::get('/courses/{id}/instructor', [CourseController::class, 'getCourseInstructor']); //
-    Route::get('/courses/{id}/requiredskills', [CourseController::class, 'checkCourseHasRequiredSkills']); //
-    Route::get('/courses/{id}/skills', [CourseController::class, 'getSkillsAfterCompletionOfCourse']); //
+    Route::controller(CourseController::class)->group(function () {
+        Route::get('/courses', 'index');
+        Route::post('/courses',  'store');
+        Route::put('/courses/{id}',  'update');
+        Route::get('/courses/{id}',  'show');
+        Route::delete('/courses/{id}',  'delete');
+        Route::post('/courses/{id}/requireskills',  'attachCourseRequireSkills');
+        Route::post('/courses/{id}/skills',  'attachCourseSkills');
+        Route::put('/courses/{id}/skills',  'updateSkills');
+        ////////////Relations////////
+        Route::get('/courses/{id}/students',  'getCourseStudents');
+        Route::get('/courses/{id}/instructor',  'getCourseInstructor');
+        Route::get('/courses/{id}/requiredskills',  'checkCourseHasRequiredSkills');
+        Route::get('/courses/{id}/skills',  'getSkillsAfterCompletionOfCourse');
+    });
 
     //Skill Routes
-    Route::get('/skills', [SkillController::class, 'index']); //
-    Route::post('/skills', [SkillController::class, 'store']); //
-    Route::put('/skills/{id}', [SkillController::class, 'update']); //
-    Route::get('/skills/{id}', [SkillController::class, 'show']); //
-    Route::delete('/skills/{id}', [SkillController::class, 'destroy']); //
-
-    ////////////Relations////////
-    Route::get('/skills/{id}/courses', [SkillController::class, 'getCoursesThatHaveSkill']); //
-    Route::get('/skills/{id}/students', [SkillController::class, 'getStudentsThatHaveSkill']); //
+    Route::controller(SkillController::class)->group(function () {
+        Route::get('/skills', 'index');
+        Route::post('/skills', 'store');
+        Route::put('/skills/{id}', 'update');
+        Route::get('/skills/{id}', 'show');
+        Route::delete('/skills/{id}', 'destroy');
+        ////////////Relations////////
+        Route::get('/skills/{id}/courses', 'getCoursesThatHaveSkill');
+        Route::get('/skills/{id}/students', 'getStudentsThatHaveSkill');
+    });
 
     //Instructor Routes
-    Route::get('/instructors', [InstructorController::class, 'index']); //
-    Route::post('/instructors', [InstructorController::class, 'store']); //
-    Route::put('/instructors/{id}', [InstructorController::class, 'update']); //
-    Route::get('/instructors/{id}', [InstructorController::class, 'show']); //
-    Route::delete('/instructors/{id}', [InstructorController::class, 'delete']); //
-    ////////////Relations////////
-    Route::get('/instructors/{id}/courses', [InstructorController::class, 'getCoursesThatBelongToInstructor']); //
+    Route::controller(InstructorController::class)->group(function () {
+        Route::get('/instructors',  'index');
+        Route::post('/instructors',  'store');
+        Route::put('/instructors/{id}',  'update');
+        Route::get('/instructors/{id}',  'show');
+        Route::delete('/instructors/{id}',  'delete');
+        ////////////Relations////////
+        Route::get('/instructors/{id}/courses',  'getCoursesThatBelongToInstructor');
+    });
 
     //Supplier Routes
-    Route::get('/suppliers', [SupplierController::class, 'index']);
-    Route::get('/suppliers/{id}', [SupplierController::class, 'show']);
-    Route::post('/suppliers', [SupplierController::class, 'store']);
-    Route::put('/suppliers/{id}', [SupplierController::class, 'update']);
-    Route::delete('/suppliers/{id}', [SupplierController::class, 'delete']);
-
-    //////////Relations//////////////////
-    Route::get('/suppliers/{id}/contracts', [SupplierController::class, 'supplierContracts']);
-    Route::get('/suppliers/{id}/suppliercontractsmoney', [SupplierController::class, 'supplierContractsMoney']);
+    Route::controller(SupplierController::class)->group(function () {
+        Route::get('/suppliers',  'index');
+        Route::get('/suppliers/{id}',  'show');
+        Route::post('/suppliers',  'store');
+        Route::put('/suppliers/{id}',  'update');
+        Route::delete('/suppliers/{id}',  'delete');
+        //////////Relations//////////////////
+        Route::get('/suppliers/{id}/contracts',  'supplierContracts');
+        Route::get('/suppliers/{id}/suppliercontractsmoney',  'supplierContractsMoney');
+    });
 
     //Supplier Contracts Routes
-    Route::get('/contracts', [SupplierContractsController::class, 'index']);
-    Route::get('/contracts/{id}', [SupplierContractsController::class, 'show']);
-    Route::post('/contracts', [SupplierContractsController::class, 'store']);
-    Route::delete('/contracts/{id}', [SupplierContractsController::class, 'delete']);
+    Route::controller(SupplierContractsController::class)->group(function () {
+        Route::get('/contracts',  'index');
+        Route::get('/contracts/{id}',  'show');
+        Route::post('/contracts',  'store');
+        Route::delete('/contracts/{id}',  'delete');
+    });
 
     //Transactions Routes
-    Route::get('/transactions', [TransactionController::class, 'index']);
-    Route::post('/transactions', [TransactionController::class, 'store']);
-
-    /////////// Relations/////////
-    Route::get('/transactions/contract/{id}', [TransactionController::class, 'getContractTransactions']);
+    Route::controller(TransactionController::class)->group(function () {
+        Route::get('/transactions',  'index');
+        Route::post('/transactions',  'store');
+        /////////// Relations/////////
+        Route::get('/transactions/contract/{id}',  'getContractTransactions');
+    });
 });

@@ -9,7 +9,8 @@ use App\Models\StudentCourse;
 use App\Models\StudentEnrollCourse;
 use App\Http\Traits\ApiResponseTrait;
 use App\Http\Interfaces\StudentInterface;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 
 class StudentRepository implements StudentInterface
 {
@@ -26,75 +27,23 @@ class StudentRepository implements StudentInterface
         return $this->apiResponse(200, "Record Found", null, $students);
     }
 
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        //Create New Student
-        $formFilds = Validator::make($request->all(), [
-            'fname' => 'required|string',
-            'lname' => 'required|string',
-            'email' => 'required|email|unique:students,email|string',
-            'phone' => 'required|unique:students,phone|string',
-            'national_id' => 'required|unique:students,national_id|string',
-            'password' => 'required|confirmed|string',
-        ]);
+        $student = Student::create($request->validated());
 
-        if ($formFilds->fails()) {
-            return $this->apiResponse(400, "Validation Error", $formFilds->errors());
-        }
-
-        $student = Student::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'national_id' => $request->national_id,
-            'password' => bcrypt($request->password),
-        ]);
-
-        $response = [
+        return $this->apiResponse(201, "Created Successfully", null, [
             'Student' => $student,
-        ];
-
-        return $this->apiResponse(201, "Created Successfully", null, $response);
+        ]);
     }
 
-    public function show($id)
+    public function show(Student $student)
     {
-        $student = Student::find($id);
-
-        if ($student != null) {
-            return $this->apiResponse(200, "Records Found", null, $student);
-        } else {
-            return  $this->apiResponse(400, "There Is No Records That Match The Given Id In Database");
-        }
+        return $this->apiResponse(200, "Records Found", null, $student);
     }
 
-    public function update(Request $request, $id)
+    public function update(Student $student, UpdateStudentRequest $request)
     {
-        $student = Student::find($id);
-
-        if ($student != null) {
-            $formFilds = Validator::make($request->all(), [
-                'fname' => 'string',
-                'lname' => 'string',
-                'email' => 'email|unique:students,email|string',
-                'phone' => 'unique:students,phone|string',
-                'national_id' => 'unique:students,national_id|string',
-            ]);
-
-            if ($formFilds->fails()) {
-                return $this->apiResponse(400, "Validation Error", $formFilds->errors());
-            }
-
-            $student->update($request->all());
-            $response = [
-                'Student' => $student,
-            ];
-
-            return  $this->apiResponse(201, "Updated Successfully", null, $response);
-        } else {
-            return  $this->apiResponse(400, "There Is No Records That Match The Given Id In Database");
-        }
+        return $student->update($request->validated());
     }
 
     public function delete($id)
