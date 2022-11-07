@@ -23,7 +23,8 @@ class AdminRepository implements AdminInterface
         }
         return  $this->apiResponse(200, "There Is No Records In Database");
     }
-    public function register(Request $request)
+
+    public function store(Request $request)
     {
         $formFilds = Validator::make($request->all(), [
             'fname' => 'required|string',
@@ -38,7 +39,6 @@ class AdminRepository implements AdminInterface
             return  $this->apiResponse(400, "Validation Error", $formFilds->errors());
         }
 
-
         $admin = User::create([
             'fname' => $request->fname,
             'lname' => $request->lname,
@@ -48,8 +48,6 @@ class AdminRepository implements AdminInterface
             'password' => bcrypt($request->password),
         ]);
 
-
-
         $token = $admin->createToken('AdminToken')->plainTextToken;
 
         $response = [
@@ -58,6 +56,7 @@ class AdminRepository implements AdminInterface
         ];
         return $this->apiResponse(201, "Created Successfully", null, $response);
     }
+
     public function  show($id)
     {
         $admin = User::find($id);

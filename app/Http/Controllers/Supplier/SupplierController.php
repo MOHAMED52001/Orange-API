@@ -36,7 +36,7 @@ class SupplierController extends Controller
     public function update(Request $request, $id)
     {
         $formFilds = $request->validate([
-            'name' => 'string'
+            'name' => 'required|string'
         ]);
 
         $supplier = Supplier::find($id);
@@ -45,12 +45,12 @@ class SupplierController extends Controller
             return ["message" => "Supplier does not exist"];
         }
         $supplier->update($formFilds);
-        $supplier->save();
+
         return $supplier;
     }
 
     //Delete Specific Supplier
-    public function delete($id)
+    public function destroy($id)
     {
         Supplier::destroy($id);
     }

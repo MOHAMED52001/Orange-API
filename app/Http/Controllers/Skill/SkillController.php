@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Skill;
 
+use App\Models\Skill;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\SkillInterface;
-use Illuminate\Http\Request;
-use App\Models\Skill;
+use App\Http\Requests\Skills\StoreSkillRequest;
 
 class SkillController extends Controller
 {
@@ -21,7 +22,7 @@ class SkillController extends Controller
         return $this->SkillInterface->index();
     }
 
-    public function store(Request $request)
+    public function store(StoreSkillRequest $request)
     {
         return $this->SkillInterface->store($request);
     }

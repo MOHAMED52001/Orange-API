@@ -2,10 +2,15 @@
 
 namespace App\Http\Repositories;
 
-use App\Http\Interfaces\SkillInterface;
-use App\Http\Traits\ApiResponseTrait;
 use App\Models\Skill;
 use Illuminate\Http\Request;
+use function PHPSTORM_META\map;
+use App\Http\Traits\ApiResponseTrait;
+use PhpParser\Node\Expr\Cast\String_;
+use App\Http\Interfaces\SkillInterface;
+
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Skills\StoreSkillRequest;
 
 class SkillRepository implements SkillInterface
 {
@@ -32,13 +37,10 @@ class SkillRepository implements SkillInterface
         return  $this->apiResponse(404, "There Is No Records That Match The Given Id In Database");
     }
 
-    public function store(Request $request)
+    public function store(StoreSkillRequest $request)
     {
-        $formFilds = $request->validate([
-            'skill' => 'required|string',
-        ]);
 
-        $skill = Skill::create($formFilds);
+        $skill = Skill::create($request->validated());
 
         $response = [
             'Skill' => $skill,

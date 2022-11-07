@@ -34,8 +34,12 @@ class SupplierContractsController extends Controller
         return SupplierContract::create($formFilds);
     }
 
+    public function update()
+    {
+    }
+
     //Delete A Contract
-    public function delete($id)
+    public function destroy($id)
     {
         if (SupplierContract::destroy($id)) {
             return ["message" => "Contract Deleted"];

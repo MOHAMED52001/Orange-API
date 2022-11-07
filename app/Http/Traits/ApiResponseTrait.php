@@ -7,8 +7,6 @@ use Error;
 trait ApiResponseTrait
 {
 
-
-
     public function apiResponse($code = 200, $message = null, $errors = null, $data = null)
     {
 
@@ -27,6 +25,8 @@ trait ApiResponseTrait
             $response["errors"] = $errors;
         }
 
-        return response($response, $code);
+        // return response($response, $code);
+
+        return response()->json($response, $code);
     }
 }

@@ -93,10 +93,9 @@ class InstructorRepository implements InstructorInterface
         }
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $instructor = Instructor::find($id);
-
         if ($instructor != null) {
             $response = [
                 "Removed" => $instructor
@@ -107,6 +106,7 @@ class InstructorRepository implements InstructorInterface
             return  $this->apiResponse(200, "There Is No Records In Database");;
         }
     }
+
     public function getCoursesThatBelongToInstructor($id)
     {
         $instructor = Instructor::find($id);

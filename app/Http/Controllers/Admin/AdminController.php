@@ -13,6 +13,8 @@ class AdminController extends Controller
 
     public $AdminInterface;
 
+
+
     public function __construct(AdminInterface $AdminInterface)
     {
         $this->AdminInterface = $AdminInterface;
@@ -23,9 +25,9 @@ class AdminController extends Controller
         return $this->AdminInterface->index();
     }
 
-    public function register(Request $request)
+    public function store(Request $request)
     {
-        return $this->AdminInterface->register($request);
+        return $this->AdminInterface->store($request);
     }
 
     public function login(Request $request)
@@ -48,7 +50,7 @@ class AdminController extends Controller
         return $this->AdminInterface->update($request, $id);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         return $this->AdminInterface->delete($id);
     }

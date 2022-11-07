@@ -23,6 +23,11 @@ class TransactionController extends Controller
         return $this->TransactionInterface->index();
     }
 
+    public function show(Transaction $transaction)
+    {
+        return $this->TransactionInterface->show($transaction);
+    }
+
     //Add New Transaction For Specific Contract
     public function store(Request $request)
     {

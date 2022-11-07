@@ -22,6 +22,13 @@ class TransactionsRepository implements TransactionsInterface
         return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
     }
 
+
+    public function show(Transaction $transaction)
+    {
+        return $this->apiResponse(200, "Success", null, $transaction);
+    }
+
+
     public function store(Request $request)
     {
         $formFilds = $request->validate([
@@ -84,7 +91,7 @@ class TransactionsRepository implements TransactionsInterface
 
                     $transaction =  Transaction::create($formFilds);
 
-                    return  $this->apiResponse(200, "Money Paid Successfully", $transaction);
+                    return  $this->apiResponse(200, "Money Paid Successfully", null, $transaction);
                 }
             }
         }
@@ -103,6 +110,7 @@ class TransactionsRepository implements TransactionsInterface
             return  $this->apiResponse(200, "There Is No Contract Transactions Available For This Id");
 
         else {
+
             return  $this->apiResponse(200, "We Found Transactions Of This Contract", null, $ContractInfo);
         }
     }

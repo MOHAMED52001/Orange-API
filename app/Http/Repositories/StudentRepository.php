@@ -84,14 +84,14 @@ class StudentRepository implements StudentInterface
     public function getStudentCourses($id)
     {
         $student = Student::with(['courses' => function ($query) {
-            $query->select('title');
+            $query->select('course_id', 'title');
         }])->find($id);
 
         if ($student != null) {
             $courses = $student->courses;
 
             if (count($courses) == 0) {
-                return  $this->apiResponse(404, "Student Has No Courses");
+                return  $this->apiResponse(200, "Student Has No Courses");
             } else {
 
                 return  $this->apiResponse(200, "Student Courses", null, $courses);
@@ -100,6 +100,7 @@ class StudentRepository implements StudentInterface
             return  $this->apiResponse(404, "There Is No Records That Match The Given Id In Database");
         }
     }
+
     public function attachNewSkills(Request $request, $id)
     {
         $student = Student::find($id);
@@ -113,6 +114,7 @@ class StudentRepository implements StudentInterface
             return  $this->apiResponse(404, "There Is No Records That Match The Given Id In Database");
         }
     }
+
     public function detachSkills(Request $request, $id)
     {
         $student = Student::find($id);
@@ -125,6 +127,7 @@ class StudentRepository implements StudentInterface
             return  $this->apiResponse(404, "There Is No Records That Match The Given Id In Database");
         }
     }
+
     public function enrollStudentInCourse(Request $request, $id)
     {
         //Check if the student is already in the course
@@ -177,6 +180,7 @@ class StudentRepository implements StudentInterface
             return $this->apiResponse(201, "Student Enrolled In New Course", null, $Enroll_The_student_in_new_course);
         }
     }
+
     public function recommendCourses($id)
     {
         $student = Student::find($id);

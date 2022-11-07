@@ -38,9 +38,9 @@ class InstructorController extends Controller
         return $this->InstructorInterface->update($request, $id);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        return $this->InstructorInterface->delete($id);
+        return $this->InstructorInterface->destroy($id);
     }
 
     //Get Courses That Belongs To Instructor

@@ -37,7 +37,7 @@ class CourseController extends Controller
         return $this->CourseInterface->update($request, $id);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         return $this->CourseInterface->delete($id);
     }

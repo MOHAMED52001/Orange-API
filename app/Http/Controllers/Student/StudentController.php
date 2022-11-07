@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Student;
 
-use App\Models\Course;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use App\Models\StudentCourse;
-use App\Models\StudentEnrollCourse;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\StudentInterface;
 use App\Http\Requests\StoreStudentRequest;
@@ -14,10 +11,7 @@ use App\Http\Requests\UpdateStudentRequest;
 
 class StudentController extends Controller
 {
-
     private $StudentInterface;
-
-
 
     public function __construct(StudentInterface $StudentInterface)
     {
@@ -44,7 +38,7 @@ class StudentController extends Controller
         return $this->StudentInterface->update($student, $request);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         return $this->StudentInterface->delete($id);
     }
