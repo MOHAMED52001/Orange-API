@@ -2,93 +2,59 @@
 
 namespace App\Http\Controllers\Supplier;
 
+use App\Http\Interfaces\SupplierInterface;
 use App\Models\Supplier;
-use Illuminate\Http\Request;
-use App\Models\SupplierContract;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Supplier\StoreSupplierRequest;
+use App\Http\Requests\Supplier\UpdateSupplierRequest;
 
 class SupplierController extends Controller
 {
+    private SupplierInterface $supplier;
+    public function __construct(SupplierInterface $supplierInterface)
+    {
+        $this->supplier = $supplierInterface;
+    }
 
     //Return All Suppliers
     public function index()
     {
-        return Supplier::all();
+        return $this->supplier->index();
     }
 
     //Return Specific Supplier
-    public function show($id)
+    public function show(Supplier $supplier)
     {
-        return Supplier::find($id) ?? ["message" => "Supplier Not Found"];
+        return $this->supplier->show($supplier);
     }
 
     //Create New Supplier 
-    public function store(Request $request)
+    public function store(StoreSupplierRequest $request)
     {
-        $formFilds = $request->validate([
-            'name' => 'string|unique:suppliers,name'
-        ]);
-
-        return Supplier::create($formFilds);
+        return $this->supplier->store($request);
     }
 
     //Update Specific Supplier
-    public function update(Request $request, $id)
+    public function update(Supplier $supplier, UpdateSupplierRequest $request)
     {
-        $formFilds = $request->validate([
-            'name' => 'required|string'
-        ]);
-
-        $supplier = Supplier::find($id);
-
-        if ($supplier == null) {
-            return ["message" => "Supplier does not exist"];
-        }
-        $supplier->update($formFilds);
-
-        return $supplier;
+        return $this->supplier->update($supplier, $request);
     }
 
     //Delete Specific Supplier
-    public function destroy($id)
+    public function destroy(Supplier $supplier)
     {
-        Supplier::destroy($id);
+        return $this->supplier->destroy($supplier);
     }
 
     //Get Specific Supplier Contracts
     public function supplierContracts($id)
     {
-
-        $supplier_contracts = Supplier::with('contracts')->find($id);
-        if ($supplier_contracts == null) {
-            return ["message" => "Supplier does not exist"];
-        }
-        return $supplier_contracts;
+        return $this->supplier->supplierContracts($id);
     }
 
     //Get Supplier Contracts
     public function supplierContractsMoney($id)
     {
-        $supplier = Supplier::with('transactions')->find($id);
-
-        if ($supplier == null) {
-            return ["message" => "Supplier does not exist"];
-        }
-
-        $totalCoursesMoney = 0;
-
-        foreach ($supplier->contracts as $key => $contract) {
-            $totalCoursesMoney += $contract->price;
-        }
-
-        $totalPaid = 0;
-        foreach ($supplier->transactions as $key => $transaction) {
-            $totalPaid += $transaction->paid_amount;
-        }
-
-        return [
-            'Received Money' => $totalPaid,
-            'Money Owed' => $totalCoursesMoney
-        ];
+        return $this->supplier->supplierContractsMoney($id);
     }
 }

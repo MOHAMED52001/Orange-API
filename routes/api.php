@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Supplier Contracts Routes
     Route::apiResource('/contracts', SupplierContractsController::class);
 
+
     //Transactions Routes
     Route::controller(TransactionController::class)->group(function () {
         Route::get('/transactions',  'index');

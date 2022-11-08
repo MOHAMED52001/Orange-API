@@ -5,45 +5,45 @@ namespace App\Http\Controllers\SupplierContracts;
 use Illuminate\Http\Request;
 use App\Models\SupplierContract;
 use App\Http\Controllers\Controller;
+use App\Http\Interfaces\SupplierContractsInterface;
+use App\Http\Requests\Contracts\StoreContractsRequest;
+use App\Http\Requests\Contracts\UpdateContractRequest;
 
 class SupplierContractsController extends Controller
 {
+
+    private SupplierContractsInterface $supplierContract;
+
+    public function __construct(SupplierContractsInterface $supplierContract)
+    {
+        $this->supplierContract = $supplierContract;
+    }
+
     public function index()
     {
-        return SupplierContract::all();
+        return $this->supplierContract->index();
     }
 
     //Return Specific Contract
     public function show($id)
     {
-        return SupplierContract::find($id) ?? ["message" => "Contract Not Found"];
+        return $this->supplierContract->show($id);
     }
 
     //Create New Contract
-    public function store(Request $request)
+    public function store(StoreContractsRequest $request)
     {
-        $formFilds = $request->validate([
-            'supplier_id' => 'required|integer',
-            'course_id' => 'required|integer|unique:course_supplier_contract,course_id',
-            'price' => 'required|numeric|between:0,99999.99',
-            'course_state' => 'string|required',
-            'course_place' => 'string|required',
-        ]);
-
-
-        return SupplierContract::create($formFilds);
+        return $this->supplierContract->store($request);
     }
 
-    public function update()
+    public function update($id, UpdateContractRequest $request)
     {
+        return $this->supplierContract->update($id, $request);
     }
 
     //Delete A Contract
     public function destroy($id)
     {
-        if (SupplierContract::destroy($id)) {
-            return ["message" => "Contract Deleted"];
-        }
-        return ["message" => "Contract Not Found"];
+        return $this->supplierContract->destroy($id);
     }
 }

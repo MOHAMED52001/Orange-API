@@ -9,8 +9,10 @@ use BadMethodCallException;
 use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Database\QueryException;
 use Symfony\Component\ErrorHandler\Error\FatalError;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
@@ -54,16 +56,17 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
 
         $this->renderable(function (NotFoundHttpException $e) {
-            return  $this->apiResponse(404, "Invalid Request", "URL Not Found");
+            return  $this->apiResponse(404, "Not Found", "Object Not Found");
         });
 
         $this->renderable(function (MethodNotAllowedHttpException $e) {
             return  $this->apiResponse(405, "Method Not Allowed", $_SERVER['REQUEST_METHOD'] . " Method Is Not Allowed For This Route");
+        });
+
+        $this->renderable(function (AccessDeniedHttpException $e) {
+            return  $this->apiResponse(403, "Unauthorized Action", $e->getMessage());
         });
 
         $this->renderable(function (QueryException $e) {
@@ -84,6 +87,10 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (FatalError $e) {
             return  $this->apiResponse(500, "Fetal Error ", $e->getMessage());
+        });
+
+        $this->renderable(function (BindingResolutionException $e) {
+            return  $this->apiResponse(500, "Bind Error ", $e->getMessage());
         });
     }
 }
