@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Contracts;
+namespace App\Http\Requests\Instructors;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Http\Traits\ApiResponseTrait;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateContractRequest extends FormRequest
+class UpdateInstructorRequest extends FormRequest
 {
     use ApiResponseTrait;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,13 +28,14 @@ class UpdateContractRequest extends FormRequest
     public function rules()
     {
         return [
-            'supplier_id' => 'required|integer',
-            'course_id' => 'required|integer',
-            'price' => 'required|numeric|between:0,99999.99',
-            'course_state' => 'string|required',
-            'course_place' => 'string|required',
+            'fname' => 'string',
+            'lname' => 'string',
+            'email' => 'email|unique:instructors,email|string',
+            'phone' => 'unique:instructors,phone|string',
+            'national_id' => 'unique:instructors,national_id|string',
         ];
     }
+
     public function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->apiResponse(422, "Validation Errors", $validator->errors()));

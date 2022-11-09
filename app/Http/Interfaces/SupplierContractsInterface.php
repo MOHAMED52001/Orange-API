@@ -9,8 +9,8 @@ use App\Http\Requests\Contracts\UpdateContractRequest;
 interface SupplierContractsInterface
 {
     public function index();
-    public function show($id);
+    public function show(SupplierContract $contract);
     public function store(StoreContractsRequest $request);
-    public function update($id, UpdateContractRequest $request);
-    public function destroy($id);
+    public function update(SupplierContract $contract, UpdateContractRequest $request);
+    public function destroy(SupplierContract $contract);
 }

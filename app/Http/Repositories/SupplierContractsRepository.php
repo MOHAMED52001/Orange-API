@@ -15,27 +15,22 @@ class SupplierContractsRepository implements SupplierContractsInterface
     {
         return $this->apiResponse(200, "Found Results", null, SupplierContract::all());
     }
-    public function show($id)
+    public function show(SupplierContract $contract)
     {
-        $supplierContract = SupplierContract::findOrFail($id);
-        return $this->apiResponse(200, "Found Results", null, $supplierContract);
+        return $this->apiResponse(200, "Found Results", null, $contract);
     }
     public function store(StoreContractsRequest $request)
     {
         return $this->apiResponse(201, "Created Successfully", null, SupplierContract::create($request->validated()));
     }
-    public function update($id, UpdateContractRequest $request)
+    public function update(SupplierContract $contract, UpdateContractRequest $request)
     {
-        $contract = SupplierContract::findOrFail($id);
-
         $contract->update($request->validated());
 
         return $this->apiResponse(200, "Updated Successfully", null, $contract);
     }
-    public function destroy($id)
+    public function destroy(SupplierContract $contract)
     {
-        $contract = SupplierContract::findOrFail($id);
-
         SupplierContract::destroy($contract->id);
 
         return $this->apiResponse(200, "Deleted Successfully", null, $contract);

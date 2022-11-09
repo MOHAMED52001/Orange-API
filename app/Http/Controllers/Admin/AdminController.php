@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\AdminInterface;
-use Illuminate\Http\Request;
-use App\Models\User;
+use App\Http\Requests\Admin\StoreAdminRequest;
+use App\Http\Requests\Admin\UpdateAdminRequest;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class AdminController extends Controller
 {
-
     public $AdminInterface;
-
-
-
     public function __construct(AdminInterface $AdminInterface)
     {
         $this->AdminInterface = $AdminInterface;
@@ -25,7 +23,12 @@ class AdminController extends Controller
         return $this->AdminInterface->index();
     }
 
-    public function store(Request $request)
+    public function show(User $user)
+    {
+        return $this->AdminInterface->show($user);
+    }
+
+    public function store(StoreAdminRequest $request)
     {
         return $this->AdminInterface->store($request);
     }
@@ -40,18 +43,13 @@ class AdminController extends Controller
         return $this->AdminInterface->logout();
     }
 
-    public function show($id)
+    public function update(User $admin, UpdateAdminRequest $request)
     {
-        return $this->AdminInterface->show($id);
+        return $this->AdminInterface->update($admin, $request);
     }
 
-    public function update(Request $request, $id)
+    public function destroy(User $admin)
     {
-        return $this->AdminInterface->update($request, $id);
-    }
-
-    public function destroy($id)
-    {
-        return $this->AdminInterface->delete($id);
+        return $this->AdminInterface->destroy($admin);
     }
 }

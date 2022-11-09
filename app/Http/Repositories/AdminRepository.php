@@ -4,10 +4,12 @@
 namespace App\Http\Repositories;
 
 use App\Models\User;
-use App\Http\Interfaces\AdminInterface;
-use App\Http\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponseTrait;
+use App\Http\Interfaces\AdminInterface;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Admin\StoreAdminRequest;
+use App\Http\Requests\Admin\UpdateAdminRequest;
 
 class AdminRepository implements AdminInterface
 {
@@ -15,38 +17,19 @@ class AdminRepository implements AdminInterface
 
     public function index()
     {
-        // return all Admins
-        $admins = User::get();
-
-        if (!is_null($admins)) {
-            return $this->apiResponse(200, "Success", null, $admins);
-        }
-        return  $this->apiResponse(200, "There Is No Records In Database");
+        return $this->apiResponse(200, "Success", null, User::all());
     }
-
-    public function store(Request $request)
+    public function show(User $user)
     {
-        $formFilds = Validator::make($request->all(), [
-            'fname' => 'required|string',
-            'lname' => 'required|string',
-            'email' => 'required|email|unique:admins,email|string',
-            'phone' => 'required|unique:admins,phone|string',
-            'national_id' => 'required|unique:admins,national_id|string',
-            'password' => 'required|confirmed|string',
-        ]);
+        return $this->apiResponse(200, "Admin Found", null, $user);
+    }
+    public function store(StoreAdminRequest $request)
+    {
+        $data = $request->validated();
 
-        if ($formFilds->fails()) {
-            return  $this->apiResponse(400, "Validation Error", $formFilds->errors());
-        }
+        $data['password'] = bcrypt($request->password);
 
-        $admin = User::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'national_id' => $request->national_id,
-            'password' => bcrypt($request->password),
-        ]);
+        $admin = User::create($data);
 
         $token = $admin->createToken('AdminToken')->plainTextToken;
 
@@ -55,15 +38,6 @@ class AdminRepository implements AdminInterface
             'Token' => $token
         ];
         return $this->apiResponse(201, "Created Successfully", null, $response);
-    }
-
-    public function  show($id)
-    {
-        $admin = User::find($id);
-        if (!is_null($admin)) {
-            return $this->apiResponse(200, "Admin Found", null, $admin);
-        }
-        return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
     }
     public function logout()
     {
@@ -81,11 +55,9 @@ class AdminRepository implements AdminInterface
             ]
         );
 
-
         if ($formFilds->fails()) {
             return  $this->apiResponse(400, "Validation Error", $formFilds->errors());
         }
-
 
         $admin = User::where('email', $request->email)->first();
 
@@ -103,42 +75,15 @@ class AdminRepository implements AdminInterface
 
         return $this->apiResponse(200, 'Logged In Successfully', null, $response);
     }
-    public function update(Request $request, $id)
+    public function update(User $admin, UpdateAdminRequest $request)
     {
-        $admin = User::find($id);
+        $admin->update($request->validated());
 
-        if ($admin != null) {
-            $formFilds = Validator::make($request->all(), [
-                'fname' => 'string',
-                'lname' => 'string',
-                'email' => 'email|unique:admins,email|string',
-                'phone' => 'unique:admins,phone|string',
-                'national_id' => 'unique:admins,national_id|string',
-            ]);
-
-            if ($formFilds->fails()) {
-                return $this->apiResponse(400, "Validation Error", $formFilds->errors());
-            }
-
-
-            $admin->update($request->all());
-            $response = [
-                'Admin' => $admin,
-            ];
-
-            return $this->apiResponse(200, "Updated Successfully", null, $response);
-        } else {
-            return $this->apiResponse(404, "Admin Not Found");
-        }
+        return $this->apiResponse(200, "Updated Successfully", null, $admin);
     }
-    public function delete($id)
+    public function destroy(User $admin)
     {
-        $admin = User::find($id);
-        if (!is_null($admin)) {
-
-            User::destroy($admin->id);
-            return $this->apiResponse(200, "Admin Deleted", null, $admin);
-        }
-        return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
+        User::destroy($admin->id);
+        return $this->apiResponse(200, "Admin Deleted", null, $admin);
     }
 }

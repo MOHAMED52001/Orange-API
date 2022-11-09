@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Course;
 
+use App\Models\Course;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\CourseInterface;
-use Illuminate\Http\Request;
-use App\Models\Course;
+use App\Http\Requests\Courses\StoreCourseRequest;
+use App\Http\Requests\Courses\UpdateCourseRequest;
 
 class CourseController extends Controller
 {
@@ -22,24 +24,24 @@ class CourseController extends Controller
         return $this->CourseInterface->index();
     }
 
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
         return $this->CourseInterface->store($request);
     }
 
-    public function show($id)
+    public function show(Course $course)
     {
-        return $this->CourseInterface->show($id);
+        return $this->CourseInterface->show($course);
     }
 
-    public function update(Request $request, $id)
+    public function update(Course $course, UpdateCourseRequest $request)
     {
-        return $this->CourseInterface->update($request, $id);
+        return $this->CourseInterface->update($course, $request);
     }
 
-    public function destroy($id)
+    public function destroy(Course $course)
     {
-        return $this->CourseInterface->delete($id);
+        return $this->CourseInterface->delete($course);
     }
 
     //Add New Skills To Course

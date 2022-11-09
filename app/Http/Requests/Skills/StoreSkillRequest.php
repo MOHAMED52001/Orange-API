@@ -4,8 +4,14 @@ namespace App\Http\Requests\Skills;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Http\Traits\ApiResponseTrait;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 class StoreSkillRequest extends FormRequest
 {
+    use ApiResponseTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,7 +30,12 @@ class StoreSkillRequest extends FormRequest
     public function rules()
     {
         return [
-            'skill' => 'required|string'
+            'skill' => 'required|string|unique:skills,skill'
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException($this->apiResponse(422, "Validation Errors", $validator->errors()));
     }
 }

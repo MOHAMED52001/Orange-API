@@ -27,19 +27,19 @@ class SkillController extends Controller
         return $this->SkillInterface->store($request);
     }
 
-    public function show($id)
+    public function show(Skill $skill)
     {
-        return $this->SkillInterface->show($id);
+        return $this->SkillInterface->show($skill);
     }
 
-    public function update(Request $request, $id)
+    public function update(Skill $skill, Request $request)
     {
-        return $this->SkillInterface->update($request, $id);
+        return $this->SkillInterface->update($skill, $request);
     }
 
-    public function destroy($id)
+    public function destroy(Skill $skill)
     {
-        return $this->SkillInterface->delete($id);
+        return $this->SkillInterface->delete($skill);
     }
 
     //get Courses That BelongsTo Skill

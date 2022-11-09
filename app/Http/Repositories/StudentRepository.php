@@ -29,7 +29,12 @@ class StudentRepository implements StudentInterface
 
     public function store(StoreStudentRequest $request)
     {
-        $student = Student::create($request->validated());
+
+        $data = $request->validated();
+
+        $data['password'] = bcrypt($request->password);
+
+        $student = Student::create($data);
 
         return $this->apiResponse(201, "Created Successfully", null, [
             'Student' => $student,

@@ -2,16 +2,19 @@
 
 namespace App\Http\Interfaces;
 
+use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Http\Requests\Courses\StoreCourseRequest;
+use App\Http\Requests\Courses\UpdateCourseRequest;
 
 
 interface CourseInterface
 {
     public function index();
-    public function show($id);
-    public function store(Request $request);
-    public function update(Request $request, $id);
-    public function delete($id);
+    public function show(Course $course);
+    public function store(StoreCourseRequest $request);
+    public function update(Course $course, UpdateCourseRequest $request);
+    public function delete(Course $course);
     public function attachCourseSkills(Request $request, $id);
     public function updateCourseSkills($id);
     public function getSkillsAfterCompletionOfCourse($id);

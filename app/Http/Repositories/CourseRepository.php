@@ -2,11 +2,13 @@
 
 namespace App\Http\Repositories;
 
-use App\Http\Interfaces\CourseInterface;
-use App\Http\Traits\ApiResponseTrait;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponseTrait;
+use App\Http\Interfaces\CourseInterface;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Courses\StoreCourseRequest;
+use App\Http\Requests\Courses\UpdateCourseRequest;
 
 
 class CourseRepository implements CourseInterface
@@ -15,93 +17,37 @@ class CourseRepository implements CourseInterface
 
     public function index()
     {
-        $courses = Course::all();
-        if (!is_null($courses)) {
-            return $this->apiResponse(200, "Success", null, $courses);
-        }
-        return  $this->apiResponse(200, "There Is No Records In Database");
+        return $this->apiResponse(200, "Success", null, Course::all());
     }
-
-    public function show($id)
+    public function show(Course $course)
     {
-        $course = Course::find($id);
-
-        if ($course != null) {
-            return $this->apiResponse(200, "Course Found", null, $course);
-        } else {
-            return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
-        }
+        return $this->apiResponse(200, "Course Found", null, $course);
     }
 
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request)
     {
-        //Create New Course
-        $formFilds = Validator::make($request->all(), [
-            'title' => 'required|string',
-            'headline' => 'required|string',
-            'type' => 'required|string',
-            'technologies' => 'required|string',
-            'description' => 'required|string',
-            'duration' => 'required|string',
-            'instructor_id' => 'required',
-        ]);
-
-        if ($formFilds->fails()) {
-            return $this->apiResponse(400, "Validation Error", $formFilds->errors());
-        }
-
-        $course = Course::create($request->all());
-
-        $response = [
-            'Course' => $course,
-        ];
-
-        return $this->apiResponse(201, "Course Created Successfully", null, $response);
+        $course = Course::create($request->validated());
+        return $this->apiResponse(201, "Course Created Successfully", null, $course);
     }
 
-    public function update(Request $request, $id)
+    public function update(Course $course, UpdateCourseRequest $request)
     {
-        $course = Course::find($id);
+        $course->update($request->all());
 
-        if ($course != null) {
-            //Create New Course
-            $formFilds = Validator::make($request->all(), [
-                'title' => 'string',
-                'headline' => 'string',
-                'type' => 'string',
-                'technologies' => 'string',
-                'description' => 'string',
-                'duration' => 'string',
-                'instructor_id' => 'Integer',
-            ]);
-
-            if ($formFilds->fails()) {
-                return $this->apiResponse(400, "Validation Error", $formFilds->errors());
-            }
-
-            $course->update($request->all());
-
-            $response = [
-                'Course' => $course,
-            ];
-
-            return  $this->apiResponse(200, "Course updated successfully", null, $response);
-        } else {
-            return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
-        }
+        return  $this->apiResponse(200, "Course updated successfully", null, $course);
     }
 
-    public function delete($id)
+    public function delete(Course $course)
     {
-        $course = Course::find($id);
 
-        if ($course != null) {
-            Course::destroy($course->id);
-            return $this->apiResponse(200, "Course Deleted", null, $course);
-        } else {
-            return  $this->apiResponse(200, "There Is No Records That Match The Given Id In Database");
-        }
+        Course::destroy($course->id);
+        return $this->apiResponse(200, "Course Deleted", null, $course);
     }
+
+
+
+
+
 
     //Add New Skills To Course
     public function attachCourseSkills(Request $request, $id)

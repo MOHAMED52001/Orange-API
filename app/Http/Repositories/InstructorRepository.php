@@ -2,11 +2,12 @@
 
 namespace App\Http\Repositories;
 
-use App\Http\Interfaces\InstructorInterface;
-use App\Http\Traits\ApiResponseTrait;
 use App\Models\Instructor;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+
+use App\Http\Traits\ApiResponseTrait;
+use App\Http\Interfaces\InstructorInterface;
+use App\Http\Requests\Instructors\StoreInstructorRequest;
+use App\Http\Requests\Instructors\UpdateInstructorRequest;
 
 class InstructorRepository implements InstructorInterface
 {
@@ -14,97 +15,37 @@ class InstructorRepository implements InstructorInterface
 
     public function index()
     {
-        $instructors = Instructor::all();
-        if (!is_null($instructors)) {
-            return $this->apiResponse(200, "Success", null, $instructors);
-        }
-        return  $this->apiResponse(200, "There Is No Records In Database");
+        return $this->apiResponse(200, "Success", null,     Instructor::all());
     }
 
-    public function store(Request $request)
+    public function store(StoreInstructorRequest $request)
     {
         //Create New Instructor
-        $formFilds = Validator::make($request->all(), [
-            'fname' => 'required|string',
-            'lname' => 'required|string',
-            'email' => 'required|email|unique:instructors,email|string',
-            'phone' => 'required|unique:instructors,phone|string',
-            'national_id' => 'required|unique:instructors,national_id|string',
-            'password' => 'required|confirmed|string',
-        ]);
+        $data = $request->validated();
 
-        if ($formFilds->fails()) {
-            return  $this->apiResponse(200, "Validation Error", $formFilds->errors());
-        }
+        $data['password'] = bcrypt($request->password);
 
-        $instructor = Instructor::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'national_id' => $request->national_id,
-            'password' => bcrypt($request->password),
-        ]);
+        $instructor = Instructor::create($data);
 
-
-        $response = [
-            'Instructor' => $instructor,
-        ];
-
-        return  $this->apiResponse(200, "Instructor Created Successfully", null, $response);
+        return  $this->apiResponse(200, "Instructor Created Successfully", null, $instructor);
     }
 
-    public function show($id)
+    public function show(Instructor $instructor)
     {
-        $instructor = Instructor::find($id);
-
-        if ($instructor != null) {
-            return  $this->apiResponse(200, "Found Instructor", null, $instructor);
-        } else {
-            return  $this->apiResponse(200, "There Is No Records In Database That Match The Given Id");
-        }
+        return  $this->apiResponse(200, "Found Instructor", null, $instructor);
     }
 
-    public function update(Request $request, $id)
+    public function update(Instructor $instructor, UpdateInstructorRequest $request)
     {
-        $instructor = Instructor::find($id);
+        $instructor->update($request->all());
 
-        if ($instructor != null) {
-            $formFilds = Validator::make($request->all(), [
-                'fname' => 'string',
-                'lname' => 'string',
-                'email' => 'email|unique:instructors,email|string',
-                'phone' => 'unique:instructors,phone|string',
-                'national_id' => 'unique:instructors,national_id|string',
-            ]);
-
-            if ($formFilds->fails()) {
-                return  $this->apiResponse(200, "Validation Error", $formFilds->errors());
-            }
-
-            $instructor->update($request->all());
-            $response = [
-                'Instructor' => $instructor,
-            ];
-
-            return  $this->apiResponse(200, "Updated Successfully", null, $response);
-        } else {
-            return  $this->apiResponse(200, "There Is No Records In Database That Match The Given Id");
-        }
+        return  $this->apiResponse(200, "Updated Successfully", null, $instructor);
     }
 
-    public function destroy($id)
+    public function destroy(Instructor $instructor)
     {
-        $instructor = Instructor::find($id);
-        if ($instructor != null) {
-            $response = [
-                "Removed" => $instructor
-            ];
-            Instructor::destroy($id);
-            return $this->apiResponse(200, "Removed Successfully", null, $response);
-        } else {
-            return  $this->apiResponse(200, "There Is No Records In Database");;
-        }
+        Instructor::destroy($instructor->id);
+        return $this->apiResponse(200, "Removed Successfully", null, $instructor);
     }
 
     public function getCoursesThatBelongToInstructor($id)

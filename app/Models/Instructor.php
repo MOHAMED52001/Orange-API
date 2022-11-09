@@ -12,6 +12,10 @@ class Instructor extends Model
 
     protected $fillable = ['fname', 'lname', 'national_id', 'email', 'phone', 'password'];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
     public function courses()
     {
         return $this->hasMany(Course::class);

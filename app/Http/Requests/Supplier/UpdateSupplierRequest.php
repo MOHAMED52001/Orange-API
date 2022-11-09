@@ -3,9 +3,14 @@
 namespace App\Http\Requests\Supplier;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Traits\ApiResponseTrait;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateSupplierRequest extends FormRequest
 {
+    use ApiResponseTrait;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,5 +31,11 @@ class UpdateSupplierRequest extends FormRequest
         return [
             'name' => 'required|string'
         ];
+    }
+
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException($this->apiResponse(422, "Validation Errors", $validator->errors()));
     }
 }

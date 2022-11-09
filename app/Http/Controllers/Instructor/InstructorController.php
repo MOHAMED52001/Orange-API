@@ -8,6 +8,8 @@ use App\Models\Instructor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Interfaces\InstructorInterface;
+use App\Http\Requests\Instructors\StoreInstructorRequest;
+use App\Http\Requests\Instructors\UpdateInstructorRequest;
 
 class InstructorController extends Controller
 {
@@ -23,24 +25,24 @@ class InstructorController extends Controller
         return $this->InstructorInterface->index();
     }
 
-    public function store(Request $request)
+    public function store(StoreInstructorRequest $request)
     {
         return $this->InstructorInterface->store($request);
     }
 
-    public function show($id)
+    public function show(Instructor $instructor)
     {
-        return $this->InstructorInterface->show($id);
+        return $this->InstructorInterface->show($instructor);
     }
 
-    public function update(Request $request, $id)
+    public function update(Instructor $instructor, UpdateInstructorRequest $request)
     {
-        return $this->InstructorInterface->update($request, $id);
+        return $this->InstructorInterface->update($instructor, $request);
     }
 
-    public function destroy($id)
+    public function destroy(Instructor $instructor)
     {
-        return $this->InstructorInterface->destroy($id);
+        return $this->InstructorInterface->destroy($instructor);
     }
 
     //Get Courses That Belongs To Instructor
