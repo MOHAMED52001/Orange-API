@@ -18,28 +18,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Admins Routes
     Route::controller(AdminController::class)->group(function () {
-        // Route::get('/admins', 'index');
-        // Route::post('/admins',  'store');
-        // Route::get('/admins/{id}', 'show');
-        // Route::delete('/admins/{id}',  'delete');
-        // Route::put('/admins/{id}',  'update');
-
-        Route::apiResource('/admins', AdminController::class);
-
         Route::post('/admins/logout', 'logout');
+        Route::apiResource('/admins', AdminController::class);
     });
 
     //Student Routes
     Route::controller(StudentController::class)->group(function () {
-        // Route::get('/students', 'index');
-        // Route::post('/students', 'store');
-        // Route::get('/students/{student}', 'show');
-        // Route::put('/students/{student}', 'update');
-        // Route::delete('/students/{id}', 'destroy');
-
-
-        Route::apiResource('/students', StudentController::class);
-
         Route::post('/students/{id}/addskills', 'attachNewSkills');
         Route::delete('/students/{id}/removeskills', 'detachSkills');
         Route::post('/students/{id}/addcourse/', 'enrollStudentInCourse');
@@ -48,18 +32,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         ////////////Relations////////
         Route::get('/students/{id}/courses',  'getStudentCourses');
         Route::get('/students/{id}/skills',  'getStudentSkills');
+
+        Route::apiResource('/students', StudentController::class);
     });
 
     //Course Routes
     Route::controller(CourseController::class)->group(function () {
-        // Route::get('/courses', 'index');
-        // Route::post('/courses',  'store');
-        // Route::put('/courses/{id}',  'update');
-        // Route::get('/courses/{id}',  'show');
-        // Route::delete('/courses/{id}',  'delete');
-
-        Route::apiResource('/courses', CourseController::class);
-
         Route::post('/courses/{id}/requireskills',  'attachCourseRequireSkills');
         Route::post('/courses/{id}/skills',  'attachCourseSkills');
         Route::put('/courses/{id}/skills',  'updateSkills');
@@ -68,55 +46,38 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         Route::get('/courses/{id}/instructor',  'getCourseInstructor');
         Route::get('/courses/{id}/requiredskills',  'checkCourseHasRequiredSkills');
         Route::get('/courses/{id}/skills',  'getSkillsAfterCompletionOfCourse');
+
+        Route::apiResource('/courses', CourseController::class);
     });
 
     //Skill Routes
     Route::controller(SkillController::class)->group(function () {
-        // Route::get('/skills', 'index');
-        // Route::post('/skills', 'store');
-        // Route::put('/skills/{id}', 'update');
-        // Route::get('/skills/{id}', 'show');
-        // Route::delete('/skills/{id}', 'destroy');
-
-        Route::apiResource('skills', SkillController::class);
-
         ////////////Relations////////
         Route::get('/skills/{id}/courses', 'getCoursesThatHaveSkill');
         Route::get('/skills/{id}/students', 'getStudentsThatHaveSkill');
+
+        Route::apiResource('skills', SkillController::class);
     });
 
     //Instructor Routes
     Route::controller(InstructorController::class)->group(function () {
-        // Route::get('/instructors',  'index');
-        // Route::post('/instructors',  'store');
-        // Route::put('/instructors/{id}',  'update');
-        // Route::get('/instructors/{id}',  'show');
-        // Route::delete('/instructors/{id}',  'delete');
-
-        Route::apiResource('/instructors', InstructorController::class);
-
         ////////////Relations////////
         Route::get('/instructors/{id}/courses',  'getCoursesThatBelongToInstructor');
+
+        Route::apiResource('/instructors', InstructorController::class);
     });
 
     //Supplier Routes
     Route::controller(SupplierController::class)->group(function () {
-        // Route::get('/suppliers',  'index');
-        // Route::get('/suppliers/{id}',  'show');
-        // Route::post('/suppliers',  'store');
-        // Route::put('/suppliers/{id}',  'update');
-        // Route::delete('/suppliers/{id}',  'destroy');
-
-        Route::apiResource('/suppliers', SupplierController::class);
-
         //////////Relations//////////////////
         Route::get('/suppliers/{id}/contracts',  'supplierContracts');
         Route::get('/suppliers/{id}/suppliercontractsmoney',  'supplierContractsMoney');
+
+        Route::apiResource('/suppliers', SupplierController::class);
     });
 
     //Supplier Contracts Routes
     Route::apiResource('/contracts', SupplierContractsController::class);
-
 
     //Transactions Routes
     Route::controller(TransactionController::class)->group(function () {

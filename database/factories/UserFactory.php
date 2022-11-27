@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -24,9 +24,10 @@ class UserFactory extends Factory
                 'fname' => 'ODC',
                 'lname' => 'ODC',
                 'email' => 'ODCadmin@orange.com',
-                'national_id' => "3010541545266",
-                'phone' => "02182035453",
-                'password' => $password
+                'national_id' => "3010541545266aa",
+                'phone' => "0218a203a5453",
+                'password' => $password,
+                'role_id' => Role::SUPER_ADMIN
             ];
     }
 

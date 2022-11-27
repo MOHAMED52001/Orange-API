@@ -5,6 +5,7 @@ namespace App\Http\Repositories;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\ApiResponseTrait;
 use App\Http\Interfaces\AdminInterface;
 use Illuminate\Support\Facades\Validator;
@@ -59,17 +60,16 @@ class AdminRepository implements AdminInterface
             return  $this->apiResponse(400, "Validation Error", $formFilds->errors());
         }
 
-        $admin = User::where('email', $request->email)->first();
-
-        if (!$admin || !password_verify($request->password, $admin->password)) {
-            return $this->apiResponse(401, 'Invalid Credentials');
+        if (!Auth::attempt($request->only(['email', 'password']))) {
+            return $this->apiResponse(401, 'Login Failed', "Invalid Credentials");
         }
 
+        $user = User::where('email', $request->email)->first();
 
-        $token = $admin->createToken('AdminToken')->plainTextToken;
+        $token = $user->createToken('UserToken')->plainTextToken;
 
         $response = [
-            'Admin' => $admin,
+            'User' => $user,
             'Token' => $token
         ];
 

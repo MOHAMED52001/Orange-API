@@ -57,40 +57,40 @@ class Handler extends ExceptionHandler
     public function register()
     {
 
-        $this->renderable(function (NotFoundHttpException $e) {
-            return  $this->apiResponse(404, "Not Found", "Object Not Found");
-        });
+        // $this->renderable(function (NotFoundHttpException $e, $request) {
+        //     return  $this->apiResponse(404, "Not Found", "Object Not Found");
+        // });
 
-        $this->renderable(function (MethodNotAllowedHttpException $e) {
-            return  $this->apiResponse(405, "Method Not Allowed", $_SERVER['REQUEST_METHOD'] . " Method Is Not Allowed For This Route");
-        });
+        // $this->renderable(function (MethodNotAllowedHttpException $e) {
+        //     return  $this->apiResponse(405, "Method Not Allowed", $_SERVER['REQUEST_METHOD'] . " Method Is Not Allowed For This Route");
+        // });
 
-        $this->renderable(function (AccessDeniedHttpException $e) {
-            return  $this->apiResponse(403, "Unauthorized Action", $e->getMessage());
-        });
+        // $this->renderable(function (AccessDeniedHttpException $e) {
+        //     return  $this->apiResponse(403, "Unauthorized Action", $e->getMessage());
+        // });
 
-        $this->renderable(function (QueryException $e) {
-            return  $this->apiResponse(500, "DataBase Error", $e->getMessage());
-        });
+        // $this->renderable(function (QueryException $e) {
+        //     return  $this->apiResponse(500, "DataBase Error", $e->getMessage());
+        // });
 
-        $this->renderable(function (BadMethodCallException $e) {
-            return  $this->apiResponse(500, "Method Deos Not Exist", $e->getMessage());
-        });
+        // $this->renderable(function (BadMethodCallException $e) {
+        //     return  $this->apiResponse(500, "Method Deos Not Exist", $e->getMessage());
+        // });
 
-        $this->renderable(function (Error $e) {
-            return  $this->apiResponse(500, "Error", $e->getMessage());
-        });
+        // $this->renderable(function (Error $e) {
+        //     return  $this->apiResponse(500, "Error", $e->getMessage());
+        // });
 
-        $this->renderable(function (ErrorException $e) {
-            return  $this->apiResponse(500, "Error", $e->getMessage());
-        });
+        // $this->renderable(function (ErrorException $e) {
+        //     return  $this->apiResponse(500, "Error", $e->getMessage());
+        // });
 
-        $this->renderable(function (FatalError $e) {
-            return  $this->apiResponse(500, "Fetal Error ", $e->getMessage());
-        });
+        // $this->renderable(function (FatalError $e) {
+        //     return  $this->apiResponse(500, "Fetal Error ", $e->getMessage());
+        // });
 
-        $this->renderable(function (BindingResolutionException $e) {
-            return  $this->apiResponse(500, "Bind Error ", $e->getMessage());
-        });
+        // $this->renderable(function (BindingResolutionException $e) {
+        //     return  $this->apiResponse(500, "Bind Error ", $e->getMessage());
+        // });
     }
 }

@@ -10,6 +10,8 @@ class Student extends Model
 {
     use HasFactory;
 
+    protected $table = "users";
+
     protected $fillable = ['fname', 'lname', 'national_id', 'email', 'phone', 'password'];
 
     protected $hidden = ['pivot', 'password', 'email_verified_at', 'remember_token', 'created_at', 'updated_at'];

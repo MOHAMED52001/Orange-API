@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('technologies');
             $table->string('description');
             $table->string('duration');
+            $table->foreignId('instructor_id')->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
