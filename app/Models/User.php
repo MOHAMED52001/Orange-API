@@ -31,7 +31,6 @@ class User extends Authenticatable
         'created_at',
         'updated_at',
         'email_verified_at',
-        'role_id'
     ];
 
     /**
@@ -42,10 +41,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-
-    public function isAdministrator()
-    {
-        return $this->role_id == 1;
-    }
 }

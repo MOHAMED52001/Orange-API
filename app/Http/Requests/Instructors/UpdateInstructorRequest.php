@@ -30,9 +30,9 @@ class UpdateInstructorRequest extends FormRequest
         return [
             'fname' => 'string',
             'lname' => 'string',
-            'email' => 'email|unique:instructors,email|string',
-            'phone' => 'unique:instructors,phone|string',
-            'national_id' => 'unique:instructors,national_id|string',
+            'email' => 'email|unique:users,email|string',
+            'phone' => 'unique:users,phone|string',
+            'national_id' => 'unique:users,national_id|string',
         ];
     }
 

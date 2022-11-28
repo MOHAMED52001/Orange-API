@@ -32,9 +32,9 @@ class UpdateStudentRequest extends FormRequest
         return [
             'fname' => 'string',
             'lname' => 'string',
-            'email' => 'email:rfc,dns|unique:students,email|string',
-            'phone' => 'unique:students,phone|string',
-            'national_id' => 'unique:students,national_id|string'
+            'email' => 'email:rfc,dns|unique:users,email|string',
+            'phone' => 'unique:users,phone|string',
+            'national_id' => 'unique:users,national_id|string'
         ];
     }
 

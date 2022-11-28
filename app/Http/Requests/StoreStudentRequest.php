@@ -30,9 +30,9 @@ class StoreStudentRequest extends FormRequest
         return [
             'fname' => 'required|string',
             'lname' => 'required|string',
-            'email' => 'required|email:rfc,dns|unique:students,email|string',
-            'phone' => 'required|unique:students,phone|string',
-            'national_id' => 'required|unique:students,national_id|string',
+            'email' => 'required|email:rfc,dns|unique:users,email|string',
+            'phone' => 'required|unique:users,phone|string',
+            'national_id' => 'required|unique:users,national_id|string',
             'password' => 'required|confirmed|string',
         ];
     }

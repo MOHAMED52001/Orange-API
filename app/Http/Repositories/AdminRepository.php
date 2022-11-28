@@ -11,6 +11,7 @@ use App\Http\Interfaces\AdminInterface;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Admin\StoreAdminRequest;
 use App\Http\Requests\Admin\UpdateAdminRequest;
+use App\Models\Role;
 
 class AdminRepository implements AdminInterface
 {
@@ -18,11 +19,14 @@ class AdminRepository implements AdminInterface
 
     public function index()
     {
-        return $this->apiResponse(200, "Success", null, User::all());
+        $admins = User::where('role_id', Role::SUPER_ADMIN)
+            ->orWhere('role_id', Role::ADMIN)->get();
+
+        return $this->apiResponse(200, "Success", null, $admins);
     }
     public function show(User $user)
     {
-        return $this->apiResponse(200, "Admin Found", null, $user);
+        return $this->apiResponse(200, "Success", null, $user);
     }
     public function store(StoreAdminRequest $request)
     {
@@ -39,41 +43,6 @@ class AdminRepository implements AdminInterface
             'Token' => $token
         ];
         return $this->apiResponse(201, "Created Successfully", null, $response);
-    }
-    public function logout()
-    {
-        auth()->user()->tokens()->delete();
-
-        return $this->apiResponse(200, 'Logged out successfully');
-    }
-    public function login(Request $request)
-    {
-        $formFilds = Validator::make(
-            $request->all(),
-            [
-                'email' => 'required|string',
-                'password' => 'required|string',
-            ]
-        );
-
-        if ($formFilds->fails()) {
-            return  $this->apiResponse(400, "Validation Error", $formFilds->errors());
-        }
-
-        if (!Auth::attempt($request->only(['email', 'password']))) {
-            return $this->apiResponse(401, 'Login Failed', "Invalid Credentials");
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        $token = $user->createToken('UserToken')->plainTextToken;
-
-        $response = [
-            'User' => $user,
-            'Token' => $token
-        ];
-
-        return $this->apiResponse(200, 'Logged In Successfully', null, $response);
     }
     public function update(User $admin, UpdateAdminRequest $request)
     {

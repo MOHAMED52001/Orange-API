@@ -2,8 +2,9 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Instructor;
+use App\Models\Role;
 
+use App\Models\Instructor;
 use App\Http\Traits\ApiResponseTrait;
 use App\Http\Interfaces\InstructorInterface;
 use App\Http\Requests\Instructors\StoreInstructorRequest;
@@ -24,6 +25,7 @@ class InstructorRepository implements InstructorInterface
         $data = $request->validated();
 
         $data['password'] = bcrypt($request->password);
+        $data['role_id'] = Role::Instructor;
 
         $instructor = Instructor::create($data);
 

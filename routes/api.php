@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\Course\CourseController;
 use App\Http\Controllers\Student\StudentController;
@@ -11,17 +12,17 @@ use App\Http\Controllers\Transaction\TransactionController;
 use App\Http\Controllers\SupplierContracts\SupplierContractsController;
 
 //Public Routes
-Route::post('/admins/login', [AdminController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login')->middleware(['guest']);
 
 //Protected Routes
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'is_admin']], function () {
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     //Admins Routes
     Route::controller(AdminController::class)->group(function () {
-        Route::post('/admins/logout', 'logout');
         Route::apiResource('/admins', AdminController::class);
     });
-
     //Student Routes
     Route::controller(StudentController::class)->group(function () {
         Route::post('/students/{id}/addskills', 'attachNewSkills');

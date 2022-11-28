@@ -29,9 +29,9 @@ class UpdateAdminRequest extends FormRequest
         return [
             'fname' => 'string',
             'lname' => 'string',
-            'email' => 'email|unique:admins,email|string',
-            'phone' => 'unique:admins,phone|string',
-            'national_id' => 'unique:admins,national_id|string',
+            'email' => 'email|unique:users,email|string',
+            'phone' => 'unique:users,phone|string',
+            'national_id' => 'unique:users,national_id|string',
         ];
     }
 

@@ -14,6 +14,4 @@ interface AdminInterface
     public function store(StoreAdminRequest $request);
     public function update(User $admin, UpdateAdminRequest $request);
     public function destroy(User $admin);
-    public function login(Request $request);
-    public function logout();
 }

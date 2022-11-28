@@ -2,11 +2,14 @@
 
 namespace App\Http\Repositories;
 
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Course;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Models\StudentCourse;
 use App\Models\StudentEnrollCourse;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Traits\ApiResponseTrait;
 use App\Http\Interfaces\StudentInterface;
 use App\Http\Requests\StoreStudentRequest;
@@ -18,13 +21,9 @@ class StudentRepository implements StudentInterface
 
     public function index()
     {
-        $students = Student::all();
+        $users = User::where('role_id', Role::Student)->get();
 
-        if (is_null($students)) {
-            return  $this->apiResponse(404, "There Is No Records In Database");
-        }
-
-        return $this->apiResponse(200, "Record Found", null, $students);
+        return $this->apiResponse(200, "Success", null, $users);
     }
 
     public function store(StoreStudentRequest $request)
@@ -34,7 +33,9 @@ class StudentRepository implements StudentInterface
 
         $data['password'] = bcrypt($request->password);
 
-        $student = Student::create($data);
+        $data['role_id'] = Role::Student;
+
+        $student = User::create($data);
 
         return $this->apiResponse(201, "Created Successfully", null, [
             'Student' => $student,
@@ -43,7 +44,11 @@ class StudentRepository implements StudentInterface
 
     public function show(Student $student)
     {
-        return $this->apiResponse(200, "Records Found", null, $student);
+
+        if ($student->id == Auth::id() || Auth::user()->role_id == Role::SUPER_ADMIN) {
+            return $this->apiResponse(200, "Records Found", null, $student);
+        }
+        return $this->apiResponse(403, "Unauthorized", "You Don't Have The Permission");
     }
 
     public function update(Student $student, UpdateStudentRequest $request)
@@ -65,6 +70,10 @@ class StudentRepository implements StudentInterface
             return  $this->apiResponse(404, "There Is No Records That Match The Given Id In Database");
         }
     }
+
+
+
+
 
     public function getStudentSkills($id)
     {

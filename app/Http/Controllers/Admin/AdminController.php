@@ -15,6 +15,8 @@ class AdminController extends Controller
     public $AdminInterface;
     public function __construct(AdminInterface $AdminInterface)
     {
+        $this->middleware('is_admin');
+
         $this->AdminInterface = $AdminInterface;
     }
 
@@ -33,15 +35,6 @@ class AdminController extends Controller
         return $this->AdminInterface->store($request);
     }
 
-    public function login(Request $request)
-    {
-        return $this->AdminInterface->login($request);
-    }
-
-    public function logout()
-    {
-        return $this->AdminInterface->logout();
-    }
 
     public function update(User $admin, UpdateAdminRequest $request)
     {

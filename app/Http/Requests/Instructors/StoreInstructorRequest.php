@@ -30,9 +30,9 @@ class StoreInstructorRequest extends FormRequest
         return [
             'fname' => 'required|string',
             'lname' => 'required|string',
-            'email' => 'required|email|unique:instructors,email|string',
-            'phone' => 'required|unique:instructors,phone|string',
-            'national_id' => 'required|unique:instructors,national_id|string',
+            'email' => 'required|email|unique:users,email|string',
+            'phone' => 'required|unique:users,phone|string',
+            'national_id' => 'required|unique:users,national_id|string',
             'password' => 'required|confirmed|string',
         ];
     }
